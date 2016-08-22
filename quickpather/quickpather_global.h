@@ -3,7 +3,7 @@
 
 #include <QtCore/qglobal.h>
 
-#if defined(PATHFINDING_LIBRARY)
+#if defined(QUICKPATHER_LIBRARY)
 #  define QUICKPATHERSHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define QUICKPATHERSHARED_EXPORT Q_DECL_IMPORT

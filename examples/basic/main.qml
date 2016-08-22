@@ -9,6 +9,8 @@ Window {
     height: 480
     title: qsTr("Hello World")
 
+    Component.onCompleted: gameTimer.start()
+
     Shortcut {
         sequence: "Ctrl+Q"
         onActivated: Qt.quit()
@@ -16,6 +18,12 @@ Window {
 
     PathFinder {
         id: pathFinder
+
+        timer: gameTimer
+    }
+
+    GameTimer {
+        id: gameTimer
     }
 
     Rectangle {
@@ -35,10 +43,6 @@ Window {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            for (var p in pathFinder) {
-                print(p)
-            }
-
             pathFinder.moveTo(targetItem, Qt.point(destination.x, destination.y))
         }
     }

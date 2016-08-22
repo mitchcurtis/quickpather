@@ -1,38 +1,32 @@
-# C++ objects and libs
-
-*.slo
-*.lo
-*.o
-*.a
-*.la
-*.lai
-*.so
+*.exe
+*.exe*
+*.ilk
 *.dll
-*.dylib
+*.embed.manifest
+*.rc
+*.res
+*.exp
+*.lib
+*.o
+*.obj
+*.pdb
+*lib*.so*
 
-# Qt-es
-
-/.qmake.cache
-/.qmake.stash
-*.pro.user
-*.pro.user.*
-*.qbs.user
-*.qbs.user.*
-*.moc
-moc_*.cpp
-qrc_*.cpp
 ui_*.h
+moc_*.cpp
+moc_*.obj
+*.pro.user
+*.user.*
 Makefile*
-*build-*
-
-# QtCreator
-
+*.moc
+qrc_*.cpp
+.qmake.stash
 *.autosave
 
-# QtCtreator Qml
-*.qmlproject.user
-*.qmlproject.user.*
+*.log
+*.mid
+*.sav
+*.directory
 
-# QtCtreator CMake
-CMakeLists.txt.user
-
+app/tshnm
+app/debug/

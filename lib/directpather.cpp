@@ -1,4 +1,4 @@
-#include "directpathfinder.h"
+#include "directpather.h"
 
 #include <QDebug>
 #include <QTransform>
@@ -8,12 +8,12 @@
 #include "quickentity.h"
 #include "mathutils.h"
 
-DirectPathFinder::DirectPathFinder() :
+DirectPather::DirectPather() :
     mTimer(nullptr)
 {
 }
 
-void DirectPathFinder::moveTo(QuickEntity *entity, const QPointF &pos)
+void DirectPather::moveTo(QuickEntity *entity, const QPointF &pos)
 {
     if (!mTimer) {
         qWarning() << "No timer set";
@@ -34,12 +34,12 @@ void DirectPathFinder::moveTo(QuickEntity *entity, const QPointF &pos)
     mData.insert(entity, pathData);
 }
 
-GameTimer *DirectPathFinder::timer() const
+GameTimer *DirectPather::timer() const
 {
     return mTimer;
 }
 
-void DirectPathFinder::setTimer(GameTimer *timer)
+void DirectPather::setTimer(GameTimer *timer)
 {
     if (timer == mTimer)
         return;
@@ -50,7 +50,7 @@ void DirectPathFinder::setTimer(GameTimer *timer)
     mTimer = timer;
 
     if (mTimer)
-        connect(mTimer, &GameTimer::updated, this, &DirectPathFinder::timerUpdated);
+        connect(mTimer, &GameTimer::updated, this, &DirectPather::timerUpdated);
 
     emit timerChanged();
 }
@@ -82,7 +82,7 @@ static QPointF moveBy(const QPointF &pos, qreal rotation, float distance)
     return pos - QTransform().rotate(rotation).map(QPointF(0, distance));
 }
 
-void DirectPathFinder::timerUpdated(float delta)
+void DirectPather::timerUpdated(float delta)
 {
     QHashIterator<QuickEntity*, DirectPathData> it(mData);
     while (it.hasNext()) {

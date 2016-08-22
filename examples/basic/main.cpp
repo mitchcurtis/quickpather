@@ -2,7 +2,7 @@
 #include <QQmlApplicationEngine>
 
 #include "gametimer.h"
-#include "directpathfinder.h"
+#include "directpather.h"
 #include "quickentity.h"
 
 int main(int argc, char *argv[])
@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     qmlRegisterType<GameTimer>("QuickPath", 1, 0, "GameTimer");
-    qmlRegisterType<DirectPathFinder>("QuickPath", 1, 0, "DirectPathFinder");
+    qmlRegisterType<DirectPather>("QuickPath", 1, 0, "DirectPathFinder");
     qmlRegisterType<QuickEntity>("QuickPath", 1, 0, "QuickEntity");
 
     QQmlApplicationEngine engine;

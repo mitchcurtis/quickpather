@@ -1,21 +1,21 @@
 QT += quick
 
-TARGET = pathfinding
+TARGET = quickpather
 TEMPLATE = lib
 
-DEFINES += PATHFINDING_LIBRARY
+DEFINES += QUICKPATHER_LIBRARY
 
 SOURCES += \
     gametimer.cpp \
     quickentity.cpp \
-    directpathfinder.cpp
+    directpather.cpp
 
 HEADERS += \
-        pathfinding_global.h \
     gametimer.h \
     mathutils.h \
     quickentity.h \
-    directpathfinder.h
+    directpather.h \
+    quickpather_global.h
 
 #unix {
 #    target.path = /usr/lib

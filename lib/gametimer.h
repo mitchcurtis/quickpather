@@ -6,9 +6,9 @@
 #include <QElapsedTimer>
 #include <QDateTime>
 
-#include "pathfinding_global.h"
+#include "quickpather_global.h"
 
-class PATHFINDINGSHARED_EXPORT GameTimer : public QObject
+class QUICKPATHERSHARED_EXPORT GameTimer : public QObject
 {
     Q_OBJECT
 

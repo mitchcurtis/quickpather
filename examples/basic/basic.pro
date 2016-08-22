@@ -13,16 +13,16 @@ QML_IMPORT_PATH =
 # Default rules for deployment.
 include(deployment.pri)
 
-INCLUDEPATH += ../../pathfinding
+INCLUDEPATH += ../../quickpather
 
 win32 {
     CONFIG(debug, debug|release) {
-        LIBS += -L"../../pathfinding/debug" -lpathfinding
+        LIBS += -L"../../quickpather/debug" -lpathfinding
     } else {
-        LIBS += -L"../../pathfinding/release" -lpathfinding
+        LIBS += -L"../../quickpather/release" -lpathfinding
     }
 } else {
-    LIBS += -L"../../pathfinding" -lpathfinding
+    LIBS += -L"../../quickpather" -lpathfinding
 }
 
 

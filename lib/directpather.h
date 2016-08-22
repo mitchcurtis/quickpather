@@ -1,7 +1,7 @@
-#ifndef DIRECTPATHFINDER_H
-#define DIRECTPATHFINDER_H
+#ifndef DIRECTPATHER_H
+#define DIRECTPATHER_H
 
-#include "pathfinding_global.h"
+#include "quickpather_global.h"
 
 #include <QHash>
 #include <QObject>
@@ -17,13 +17,13 @@ public:
     QPointF targetPos;
 };
 
-class PATHFINDINGSHARED_EXPORT DirectPathFinder : public QObject
+class QUICKPATHERSHARED_EXPORT DirectPather : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
 
 public:
-    DirectPathFinder();
+    DirectPather();
 
     Q_INVOKABLE void moveTo(QuickEntity *entity, const QPointF &pos);
 
@@ -41,4 +41,4 @@ private:
     QHash<QuickEntity*, DirectPathData> mData;
 };
 
-#endif // DIRECTPATHFINDER_H
+#endif // DIRECTPATHER_H

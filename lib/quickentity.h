@@ -3,11 +3,11 @@
 
 #include <QObject>
 
-#include "pathfinding_global.h"
+#include "quickpather_global.h"
 
 class QQuickItem;
 
-class PATHFINDINGSHARED_EXPORT QuickEntity : public QObject
+class QUICKPATHERSHARED_EXPORT QuickEntity : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QQuickItem *item READ item WRITE setItem NOTIFY itemChanged)

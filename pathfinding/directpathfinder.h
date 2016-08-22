@@ -1,29 +1,31 @@
-#ifndef PATHFINDER_H
-#define PATHFINDER_H
+#ifndef DIRECTPATHFINDER_H
+#define DIRECTPATHFINDER_H
 
 #include "pathfinding_global.h"
 
-#include <QQuickItem>
 #include <QHash>
+#include <QObject>
+#include <QPointF>
+#include <QVector>
 
 class GameTimer;
+class QuickEntity;
 
-class ItemData
+class DirectPathData
 {
 public:
     QPointF targetPos;
-    QVector<QPointF> nodes;
 };
 
-class PATHFINDINGSHARED_EXPORT PathFinder : public QObject
+class PATHFINDINGSHARED_EXPORT DirectPathFinder : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
 
 public:
-    PathFinder();
+    DirectPathFinder();
 
-    Q_INVOKABLE void moveTo(QQuickItem *item, const QPointF &pos);
+    Q_INVOKABLE void moveTo(QuickEntity *entity, const QPointF &pos);
 
     GameTimer *timer() const;
     void setTimer(GameTimer *timer);
@@ -36,7 +38,7 @@ private slots:
 
 private:
     GameTimer *mTimer;
-    QHash<QQuickItem*, ItemData> mData;
+    QHash<QuickEntity*, DirectPathData> mData;
 };
 
-#endif // PATHFINDER_H
+#endif // DIRECTPATHFINDER_H

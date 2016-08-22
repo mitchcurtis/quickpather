@@ -33,6 +33,8 @@ void GameTimer::pause()
     }
 
     mTimer.disconnect(this);
+
+    setRunning(false);
 }
 
 void GameTimer::resume()
@@ -45,6 +47,16 @@ void GameTimer::resume()
     // Disregard any time that's passed while the game was paused.
     mElapsedTimer.start();
     QObject::connect(&mTimer, SIGNAL(timeout()), this, SLOT(doUpdate()));
+
+    setRunning(true);
+}
+
+void GameTimer::togglePaused()
+{
+    if (mRunning)
+        pause();
+    else
+        resume();
 }
 
 int GameTimer::fps() const

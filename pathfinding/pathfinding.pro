@@ -5,12 +5,17 @@ TEMPLATE = lib
 
 DEFINES += PATHFINDING_LIBRARY
 
-SOURCES += pathfinder.cpp \
-    gametimer.cpp
+SOURCES += \
+    gametimer.cpp \
+    quickentity.cpp \
+    directpathfinder.cpp
 
-HEADERS += pathfinder.h \
+HEADERS += \
         pathfinding_global.h \
-    gametimer.h
+    gametimer.h \
+    mathutils.h \
+    quickentity.h \
+    directpathfinder.h
 
 #unix {
 #    target.path = /usr/lib

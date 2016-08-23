@@ -11,27 +11,46 @@ ApplicationWindow {
     height: 480
     title: qsTr("Hello World")
 
-    Component.onCompleted: gameTimer.start()
+    property string currentPather: "DirectPather"
+
+    Component.onCompleted: {
+        resetScene();
+        gameTimer.start();
+    }
 
     Shortcut {
         sequence: "Ctrl+Q"
         onActivated: Qt.quit()
     }
 
-    DirectPathFinder {
-        id: pathFinder
-
-        timer: gameTimer
-    }
-
     GameTimer {
         id: gameTimer
     }
 
+    DirectPather {
+        id: pathFinder
+        timer: gameTimer
+    }
+
+    DirectPather {
+        id: gridFinder
+        timer: gameTimer
+    }
+
+    header: ToolBar {
+        ToolButton {
+            text: "Pathers"
+            onClicked: drawer.open()
+        }
+    }
+
+    function resetScene() {
+        targetItem.x = window.width / 2;
+        targetItem.y = window.height / 2;
+    }
+
     Rectangle {
         id: targetItem
-        x: window.width / 2
-        y: window.height / 2
         width: 20
         height: 20
         color: "blue"
@@ -68,6 +87,30 @@ ApplicationWindow {
         }
     }
 
+    ButtonGroup {
+        id: buttonGroup
+    }
+
+    Drawer {
+        id: drawer
+        width: 0.3 * window.width
+        height: window.height
+
+        ListView {
+            anchors.fill: parent
+            model: ["DirectPather", "GridPather"]
+            delegate: RadioDelegate {
+                checked: currentPather == modelData
+                text: modelData
+                width: parent.width
+
+                onClicked: currentPather = modelData
+
+                ButtonGroup.group: buttonGroup
+            }
+        }
+    }
+
     Label {
         text: "Click to move item"
         opacity: 0.5
@@ -76,7 +119,7 @@ ApplicationWindow {
 
     footer: RowLayout {
         Label {
-            text: "Speed"
+            text: "Entity speed"
         }
 
         Slider {
@@ -97,7 +140,7 @@ ApplicationWindow {
         }
 
         Label {
-            text: "Paused"
+            text: "Game timer paused"
         }
 
         Switch {

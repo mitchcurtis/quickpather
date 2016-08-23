@@ -17,12 +17,12 @@ INCLUDEPATH += ../../quickpather
 
 win32 {
     CONFIG(debug, debug|release) {
-        LIBS += -L"../../quickpather/debug" -lpathfinding
+        LIBS += -L"../../quickpather/debug" -lquickpather
     } else {
-        LIBS += -L"../../quickpather/release" -lpathfinding
+        LIBS += -L"../../quickpather/release" -lquickpather
     }
 } else {
-    LIBS += -L"../../quickpather" -lpathfinding
+    LIBS += -L"../../quickpather" -lquickpather
 }
 
 

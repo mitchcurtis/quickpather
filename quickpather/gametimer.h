@@ -22,11 +22,11 @@ public:
 
     int fps() const;
     QDateTime dateTime() const;
-    float timeSpeedMultiplier() const;
-    void setTimeSpeedMultiplier(float timeSpeedMultiplier);
+    qreal timeSpeedMultiplier() const;
+    void setTimeSpeedMultiplier(qreal timeSpeedMultiplier);
 
 signals:
-    void updated(float delta);
+    void updated(qreal delta);
 
 private slots:
     void doUpdate();
@@ -40,10 +40,10 @@ private:
     const int mFps;
     QTimer mTimer;
     QElapsedTimer mElapsedTimer;
-    float mRemainder;
+    qreal mRemainder;
     /*! Seconds elapsed since this game was started; accumulates across saves. */
     double mSimulatedTime;
-    float mTimeSpeedMultiplier;
+    qreal mTimeSpeedMultiplier;
     QDateTime mDateTime;
     QDateTime mGameStartDate;
 };

@@ -1,5 +1,5 @@
-#ifndef DIRECTPATHER_H
-#define DIRECTPATHER_H
+#ifndef GRIDPATHER_H
+#define GRIDPATHER_H
 
 #include "quickpather_global.h"
 
@@ -8,39 +8,48 @@
 #include <QPointF>
 #include <QVector>
 
+#include "gridpathnode.h"
+
 class GameTimer;
 class QuickEntity;
 class SteeringAgent;
 
-class DirectPathData
+class GridPathData
 {
 public:
     QPointF targetPos;
+    QVector<QSharedPointer<GridPathNode> > nodes;
 };
 
-class QUICKPATHERSHARED_EXPORT DirectPather : public QObject
+class QUICKPATHERSHARED_EXPORT GridPather : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int cellSize READ cellSize WRITE setCellSize NOTIFY cellSizeChanged)
     Q_PROPERTY(GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
 
 public:
-    DirectPather();
+    GridPather();
 
     Q_INVOKABLE void moveTo(QuickEntity *entity, const QPointF &pos);
+
+    int cellSize() const;
+    void setCellSize(int cellSize);
 
     GameTimer *timer() const;
     void setTimer(GameTimer *timer);
 
 signals:
+    void cellSizeChanged();
     void timerChanged();
 
 private slots:
     void timerUpdated(qreal delta);
 
 private:
+    int mCellSize;
     GameTimer *mTimer;
     SteeringAgent *mSteeringAgent;
-    QHash<QuickEntity*, DirectPathData> mData;
+    QHash<QuickEntity*, GridPathData> mData;
 };
 
-#endif // DIRECTPATHER_H
+#endif // GRIDPATHER_H

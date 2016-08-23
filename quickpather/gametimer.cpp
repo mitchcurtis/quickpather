@@ -69,14 +69,14 @@ QDateTime GameTimer::dateTime() const
     return mDateTime;
 }
 
-float GameTimer::timeSpeedMultiplier() const
+qreal GameTimer::timeSpeedMultiplier() const
 {
     return mTimeSpeedMultiplier;
 }
 
-void GameTimer::setTimeSpeedMultiplier(float timeSpeedMultiplier)
+void GameTimer::setTimeSpeedMultiplier(qreal timeSpeedMultiplier)
 {
-    mTimeSpeedMultiplier = qMax(1.0f, timeSpeedMultiplier);
+    mTimeSpeedMultiplier = qMax(1.0, timeSpeedMultiplier);
 }
 
 QDateTime GameTimer::dateFromSimulatedTime() const
@@ -95,9 +95,9 @@ void GameTimer::setRunning(bool running)
 void GameTimer::doUpdate()
 {
     // Update by constant amount each loop until we've used the time elapsed since the last frame.
-    static const float delta = 1.0 / mFps;
+    static const qreal delta = 1.0 / mFps;
     // In seconds.
-    float secondsSinceLastUpdate = mElapsedTimer.restart() * 0.001;
+    qreal secondsSinceLastUpdate = mElapsedTimer.restart() * 0.001;
     mRemainder += secondsSinceLastUpdate;
     while (mRemainder > 0) {
 

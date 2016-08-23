@@ -1,3 +1,3 @@
 # Quick Pather
 
-A simple C++ path finding library for use with Qt Quick.
+Playing around with C++ path finding exposed to QML.

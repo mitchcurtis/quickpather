@@ -27,6 +27,7 @@ public:
     DirectPather();
 
     Q_INVOKABLE void moveTo(QuickEntity *entity, const QPointF &pos);
+    Q_INVOKABLE void cancel(QuickEntity *entity);
 
     GameTimer *timer() const;
     void setTimer(GameTimer *timer);

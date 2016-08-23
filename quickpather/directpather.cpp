@@ -32,6 +32,11 @@ void DirectPather::moveTo(QuickEntity *entity, const QPointF &pos)
     mData.insert(entity, pathData);
 }
 
+void DirectPather::cancel(QuickEntity *entity)
+{
+    mData.remove(entity);
+}
+
 GameTimer *DirectPather::timer() const
 {
     return mTimer;

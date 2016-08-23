@@ -7,9 +7,9 @@ GridPathAgent::GridPathAgent()
 {
 }
 
-bool GridPathAgent::isPathComplete(const QuickEntity &, const QPointF &, const GridPathNode &currentNode) const
+bool GridPathAgent::isPathComplete(const QuickEntity &entity, const QPointF &, const GridPathNode &currentNode) const
 {
-    return Utils::fuzzyCompare(currentNode.pos(), mTargetPos, mTargetLeniency);
+    return Utils::isNextToTargetPos(currentNode.pos(), mTargetPos, entity.speed());
 }
 
 int GridPathAgent::calculateStartCost(const GridPathNode &node) const

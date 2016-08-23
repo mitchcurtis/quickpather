@@ -11,7 +11,8 @@ ApplicationWindow {
     height: 480
     title: qsTr("Hello World")
 
-    property string currentPather: "DirectPather"
+    property string currentPathType: "GridPather"
+    readonly property var currentPather: currentPathType == "DirectPather" ? directPather : gridPather
 
     Component.onCompleted: {
         resetScene();
@@ -28,12 +29,12 @@ ApplicationWindow {
     }
 
     DirectPather {
-        id: pathFinder
+        id: directPather
         timer: gameTimer
     }
 
-    DirectPather {
-        id: gridFinder
+    GridPather {
+        id: gridPather
         timer: gameTimer
     }
 
@@ -45,8 +46,17 @@ ApplicationWindow {
     }
 
     function resetScene() {
-        targetItem.x = window.width / 2;
-        targetItem.y = window.height / 2;
+        if (currentPather === directPather) {
+            targetItem.x = window.width / 2;
+            targetItem.y = window.height / 2;
+        } else {
+            // Make positions conform to grid.
+            var x = gridPather.cellSize * 10.5;
+            var y = gridPather.cellSize * 10.5;
+            targetItem.x = x - targetItem.width / 2;
+            targetItem.y = y - targetItem.height / 2;
+            moveMarkerTo(x, y);
+        }
     }
 
     Rectangle {
@@ -78,12 +88,17 @@ ApplicationWindow {
         radius: width / 2
     }
 
+    function moveMarkerTo(x, y) {
+        destinationMarker.x = x - destinationMarker.width / 2;
+        destinationMarker.y = y - destinationMarker.height / 2;
+    }
+
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
-        onClicked: {
-            destinationMarker.x = mouseX - destinationMarker.width / 2;
-            destinationMarker.y = mouseY - destinationMarker.height / 2;
-            pathFinder.moveTo(targetEntity, Qt.point(mouseX, mouseY))
+        onPressed: {
+            moveMarkerTo(mouseX, mouseY);
+            currentPather.moveTo(targetEntity, Qt.point(mouseX, mouseY))
         }
     }
 
@@ -100,11 +115,15 @@ ApplicationWindow {
             anchors.fill: parent
             model: ["DirectPather", "GridPather"]
             delegate: RadioDelegate {
-                checked: currentPather == modelData
+                checked: currentPathType == modelData
                 text: modelData
                 width: parent.width
 
-                onClicked: currentPather = modelData
+                onClicked: {
+                    currentPather.cancel(targetEntity);
+                    currentPathType = modelData;
+                    resetScene();
+                }
 
                 ButtonGroup.group: buttonGroup
             }

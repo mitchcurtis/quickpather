@@ -10,16 +10,10 @@ SteeringAgent::SteeringAgent(QObject *parent) :
 {
 }
 
-bool isNextToTargetPos(QQuickItem *item, const QPointF &targetPos, qreal targetLeniency)
-{
-    return Utils::fuzzyCompare(Utils::centrePosition(item), targetPos, targetLeniency);
-}
-
 void SteeringAgent::steerTo(QuickEntity *entity, const QPointF &pos, qreal delta)
 {
     QQuickItem *item = entity->item();
-    const qreal targetLeniency = qMax(1.0, entity->speed() * 0.05);
-    if (!isNextToTargetPos(item, pos, targetLeniency)) {
+    if (!Utils::isNextToTargetPos(entity, pos)) {
         const qreal angleToTarget = Utils::directionTo(Utils::centrePosition(item), pos) + 90;
         item->setRotation(angleToTarget);
 

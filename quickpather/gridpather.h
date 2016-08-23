@@ -31,6 +31,7 @@ public:
     GridPather();
 
     Q_INVOKABLE void moveTo(QuickEntity *entity, const QPointF &pos);
+    Q_INVOKABLE void cancel(QuickEntity *entity);
 
     int cellSize() const;
     void setCellSize(int cellSize);

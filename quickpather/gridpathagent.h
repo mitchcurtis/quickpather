@@ -26,9 +26,8 @@ public:
     */
     virtual void onPathComplete(QVector<QSharedPointer<GridPathNode> > &path);
 
-    qreal mTargetLeniency;
+private:
     bool mExcludeFirstNode;
-    const QuickEntity *mEntity;
     QPointF mTargetPos;
 };
 

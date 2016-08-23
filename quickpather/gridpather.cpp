@@ -1,6 +1,7 @@
 #include "gridpather.h"
 
 #include <QDebug>
+#include <QLoggingCategory>
 #include <QQuickItem>
 
 #include "gametimer.h"
@@ -8,6 +9,8 @@
 #include "quickentity.h"
 #include "steeringagent.h"
 #include "utils.h"
+
+Q_LOGGING_CATEGORY(lcGridPather, "quickpather.gridpather")
 
 GridPather::GridPather() :
     mCellSize(32),
@@ -24,7 +27,7 @@ static bool isPassable(const QPointF &pos, QuickEntity *entity)
     return true;
 }
 
-static int iterationLimit = 10000;
+static int iterationLimit = 1000;
 
 static const QPointF north(0, -1);
 static const QPointF south(0, 1);
@@ -50,8 +53,8 @@ void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
     }
 
     const QPointF startPos = Utils::centrePosition(entity->item());
-    if(isPassable(startPos, entity)) {
-        // starting position isn't passable
+    if (!isPassable(startPos, entity)) {
+        qCDebug(lcGridPather) << "Starting position" << pos << "isn't passable for" << entity->item();
         return;
     }
 
@@ -137,7 +140,7 @@ void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
     }
 
     if(closedList.empty()) {
-        // impossible to reach target
+        qCDebug(lcGridPather) << "Impossible for" << entity->item() << "to reach target pos" << pos;
         return;
     }
 
@@ -159,6 +162,13 @@ void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
     pathData.targetPos = pos;
     pathData.nodes = shortestPath;
     mData.insert(entity, pathData);
+
+    qCDebug(lcGridPather) << "Successfully found path (" << shortestPath.size() << "nodes) for" << entity->item() << "to target pos" << pos;
+}
+
+void GridPather::cancel(QuickEntity *entity)
+{
+    mData.remove(entity);
 }
 
 int GridPather::cellSize() const

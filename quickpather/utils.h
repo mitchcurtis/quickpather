@@ -6,6 +6,8 @@
 #include <QTransform>
 #include <QQuickItem>
 
+#include "quickentity.h"
+
 namespace Utils {
     inline bool fuzzyCompare(const QPointF &lhs, const QPointF &rhs, qreal fuzz = 0.0001) {
         return qAbs(lhs.x() - rhs.x()) <= fuzz && qAbs(lhs.y() - rhs.y()) <= fuzz;
@@ -45,6 +47,19 @@ namespace Utils {
         return QPoint(::abs(point.x()), ::abs(point.y()));
     }
 
+    inline bool isNextToTargetPos(QuickEntity *entity, const QPointF &targetPos, qreal targetLeniency = -1)
+    {
+        if (targetLeniency == -1)
+            targetLeniency = qMax(1.0, entity->speed() * 0.05);
+        return Utils::fuzzyCompare(Utils::centrePosition(entity->item()), targetPos, targetLeniency);
+    }
+
+    inline bool isNextToTargetPos(const QPointF &entityCentrePos, const QPointF &targetPos, qreal entitySpeed, qreal targetLeniency = -1)
+    {
+        if (targetLeniency == -1)
+            targetLeniency = qMax(1.0, entitySpeed * 0.05);
+        return Utils::fuzzyCompare(entityCentrePos, targetPos, targetLeniency);
+    }
 }
 
 #endif // UTILS_H

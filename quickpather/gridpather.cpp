@@ -89,6 +89,13 @@ bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
         return false;
     }
 
+    // TODO: ensure target ends up precisely over node
+    if (fmod(startPos.x() - mCellSize / 2, mCellSize) != 0 || fmod(startPos.y() - mCellSize / 2, mCellSize) != 0) {
+        qDebug() << fmod(startPos.x(), mCellSize) << fmod(startPos.y(), mCellSize);
+        qWarning() << "Currently incapable of dealing with non-cell-centered positions";
+        return false;
+    }
+
     QVector<QSharedPointer<GridPathNode> > openList;
     QVector<QSharedPointer<GridPathNode> > closedList;
     QVector<QSharedPointer<GridPathNode> > shortestPath;

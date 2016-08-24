@@ -39,7 +39,7 @@ void tst_QuickPather::gridPather()
 
     // Move from non-factor-of-cell-size position to {1, 0}
     entity.setCentrePos(QPointF(0, 0));
-    QTest::ignoreMessage(QtWarningMsg, QRegularExpression("iteration limit .* reached"));
+    QTest::ignoreMessage(QtWarningMsg, "Currently incapable of dealing with non-cell-centered positions");
     QVERIFY(!pather.moveEntityTo(&entity, pos));
     QCOMPARE(pather.pathData(&entity).nodes().size(), 0);
     // TODO: test steering as well

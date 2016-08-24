@@ -14,7 +14,7 @@ class AbstractEntity;
 class GameTimer;
 class SteeringAgent;
 
-class GridPathData
+class QUICKPATHERSHARED_EXPORT GridPathData
 {
 public:
     GridPathData();
@@ -39,7 +39,7 @@ class QUICKPATHERSHARED_EXPORT GridPather : public QObject
 public:
     explicit GridPather(QObject *parent = nullptr);
 
-    void moveEntityTo(AbstractEntity *entity, const QPointF &pos);
+    bool moveEntityTo(AbstractEntity *entity, const QPointF &pos);
     void cancelEntityMovement(AbstractEntity *entity);
 
     int cellSize() const;

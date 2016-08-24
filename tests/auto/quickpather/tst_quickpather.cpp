@@ -28,10 +28,22 @@ void tst_QuickPather::gridPather()
     pather.setTimer(&timer);
 
     Entity entity;
-    entity.setCentrePos(QPointF(16, 16));
 
-    QPointF pos(32, 0);
-    pather.moveEntityTo(&entity, pos);
+    // Move from {0, 0} to {1, 0}
+    entity.setCentrePos(QPointF(16, 16));
+    QPointF pos(48, 16);
+    QVERIFY(pather.moveEntityTo(&entity, pos));
+    QCOMPARE(pather.pathData(&entity).nodes().size(), 1);
+    // TODO: test steering as well
+    pather.cancelEntityMovement(&entity);
+
+    // Move from non-factor-of-cell-size position to {1, 0}
+    entity.setCentrePos(QPointF(0, 0));
+    QTest::ignoreMessage(QtWarningMsg, QRegularExpression("iteration limit .* reached"));
+    QVERIFY(!pather.moveEntityTo(&entity, pos));
+    QCOMPARE(pather.pathData(&entity).nodes().size(), 0);
+    // TODO: test steering as well
+    pather.cancelEntityMovement(&entity);
 }
 
 QTEST_APPLESS_MAIN(tst_QuickPather)

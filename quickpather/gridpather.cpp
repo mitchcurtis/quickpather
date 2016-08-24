@@ -71,17 +71,22 @@ const QPointF straightDirections[qtyStraightDirections] = {
     north, south, east, west
 };
 
-void GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
+/*
+   Moves \a entity to \a pos.
+
+   If a path to \a pos was found, any existing movement instructions are removed.
+*/
+bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
 {
     if (!mTimer) {
         qWarning() << "No timer set";
-        return;
+        return false;
     }
 
     const QPointF startPos = entity->centrePos();
     if (!isPassable(startPos, entity)) {
         qCDebug(lcGridPather) << "Starting position" << pos << "isn't passable for" << entity;
-        return;
+        return false;
     }
 
     QVector<QSharedPointer<GridPathNode> > openList;
@@ -168,12 +173,12 @@ void GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
 
     if (iterations == iterationLimit) {
         qWarning() << "iteration limit (" << iterationLimit << ") reached.";
-        return;
+        return false;
     }
 
     if(closedList.empty()) {
         qCDebug(lcGridPather) << "Impossible for" << entity << "to reach target pos" << pos;
-        return;
+        return false;
     }
 
     // To get the actual shortest path: working backwards from the target square,
@@ -201,6 +206,7 @@ void GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
     mData.insert(entity, pathData);
 
     qCDebug(lcGridPather) << "Successfully found path (" << shortestPath.size() << "nodes) for" << entity << "to target pos" << pos;
+    return true;
 }
 
 void GridPather::cancelEntityMovement(AbstractEntity *entity)

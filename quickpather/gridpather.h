@@ -10,6 +10,8 @@
 
 #include "gridpathnode.h"
 
+#define EXPOSE_VISUALISATION_API
+
 class GameTimer;
 class QuickEntity;
 class SteeringAgent;
@@ -19,6 +21,7 @@ class GridPathData
 public:
     QPointF targetPos;
     QVector<QSharedPointer<GridPathNode> > nodes;
+    int currentNodeIndex;
 };
 
 class QUICKPATHERSHARED_EXPORT GridPather : public QObject
@@ -42,6 +45,12 @@ public:
 signals:
     void cellSizeChanged();
     void timerChanged();
+
+#ifdef EXPOSE_VISUALISATION_API
+    void nodeAddedToClosedList(const QPointF &centrePos);
+    void nodeAddedToOpenList(const QPointF &centrePos);
+    void nodeChosen(const QPointF &centrePos);
+#endif
 
 private slots:
     void timerUpdated(qreal delta);

@@ -10,7 +10,7 @@ SteeringAgent::SteeringAgent(QObject *parent) :
 {
 }
 
-void SteeringAgent::steerTo(QuickEntity *entity, const QPointF &pos, qreal delta)
+bool SteeringAgent::steerTo(QuickEntity *entity, const QPointF &pos, qreal delta)
 {
     QQuickItem *item = entity->item();
     if (!Utils::isNextToTargetPos(entity, pos)) {
@@ -19,5 +19,8 @@ void SteeringAgent::steerTo(QuickEntity *entity, const QPointF &pos, qreal delta
 
         const QPointF newPos = Utils::moveBy(item->position(), angleToTarget, entity->speed() * delta);
         item->setPosition(newPos);
+        return false;
     }
+
+    return true;
 }

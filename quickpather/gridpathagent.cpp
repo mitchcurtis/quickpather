@@ -3,7 +3,8 @@
 #include "gridpathnode.h"
 #include "utils.h"
 
-GridPathAgent::GridPathAgent()
+GridPathAgent::GridPathAgent(const QPointF &targetPos) :
+    mTargetPos(targetPos)
 {
 }
 

@@ -72,7 +72,7 @@ void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
     const QPointF nodeDist(mCellSize, mCellSize);
 //    const QPointF boundsEnlargement = characterBoundsEnlargement();
 
-    GridPathAgent pathAgent;
+    GridPathAgent pathAgent(pos);
 
     typedef QVector<QSharedPointer<GridPathNode> > NodeVector;
     typedef NodeVector::iterator node_it;
@@ -83,6 +83,9 @@ void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
         node_it lowest = std::min_element(openList.begin(), openList.end(), totalScoreLessThan);
         // Switch it to the closed list.
         closedList.push_back(*lowest);
+#ifdef EXPOSE_VISUALISATION_API
+        emit nodeAddedToClosedList((*lowest)->pos());
+#endif
         selectedNode = *lowest;
         openList.erase(lowest);
 
@@ -127,6 +130,9 @@ void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
                     adjNode->setTargetCost(pathAgent.calculateTargetCost(*adjNode));
 
                     openList.push_back(adjNode);
+#ifdef EXPOSE_VISUALISATION_API
+                    emit nodeAddedToOpenList(adjNode->pos());
+#endif
                 }
             }
         }
@@ -149,6 +155,10 @@ void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
     QSharedPointer<GridPathNode> node = closedList.back();
     QVector<QSharedPointer<GridPathNode> > test;
     while(node) {
+#ifdef EXPOSE_VISUALISATION_API
+        emit nodeChosen(node->pos());
+#endif
+
         shortestPath.push_front(node);
         test.insert(test.begin(), node);
         node = node->parent();
@@ -161,6 +171,7 @@ void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
     GridPathData pathData;
     pathData.targetPos = pos;
     pathData.nodes = shortestPath;
+    pathData.currentNodeIndex = 0;
     mData.insert(entity, pathData);
 
     qCDebug(lcGridPather) << "Successfully found path (" << shortestPath.size() << "nodes) for" << entity->item() << "to target pos" << pos;
@@ -217,7 +228,16 @@ void GridPather::timerUpdated(qreal delta)
     while (it.hasNext()) {
         it.next();
         QuickEntity *entity = it.key();
-        GridPathData pathData = it.value();
-        mSteeringAgent->steerTo(entity, pathData.targetPos, delta);
+
+        GridPathData &pathData = mData[entity];
+        if (pathData.currentNodeIndex < pathData.nodes.size()) {
+            const GridPathNode currentNode = *pathData.nodes.at(pathData.currentNodeIndex);
+            if (mSteeringAgent->steerTo(entity, currentNode.pos(), delta)) {
+                // We've reached the current node.
+                ++pathData.currentNodeIndex;
+            }
+        } else {
+            mData.remove(entity);
+        }
     }
 }

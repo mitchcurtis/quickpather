@@ -14,7 +14,7 @@ class SteeringAgent : public QObject
 public:
     SteeringAgent(QObject *parent = nullptr);
 
-    void steerTo(QuickEntity *entity, const QPointF &pos, qreal delta);
+    bool steerTo(QuickEntity *entity, const QPointF &pos, qreal delta);
 };
 
 #endif // STEERINGAGENT_H

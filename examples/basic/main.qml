@@ -36,6 +36,29 @@ ApplicationWindow {
     GridPather {
         id: gridPather
         timer: gameTimer
+
+        onNodeAddedToClosedList: {
+            var item = grid.childAt(centrePos.x, centrePos.y);
+            if (item) {
+                item.processed = true;
+                item.open = false;
+            }
+        }
+
+        onNodeAddedToOpenList: {
+            var item = grid.childAt(centrePos.x, centrePos.y);
+            if (item) {
+                item.processed = true;
+                item.open = true;
+            }
+        }
+
+        onNodeChosen: {
+            var item = grid.childAt(centrePos.x, centrePos.y);
+            if (item) {
+                item.chosen = true;
+            }
+        }
     }
 
     header: ToolBar {
@@ -56,36 +79,10 @@ ApplicationWindow {
             targetItem.x = x - targetItem.width / 2;
             targetItem.y = y - targetItem.height / 2;
             moveMarkerTo(x, y);
+
+            // Remove path visualisations.
+            grid.resetColours();
         }
-    }
-
-    Rectangle {
-        id: targetItem
-        width: 20
-        height: 20
-        color: "blue"
-
-        Rectangle {
-            color: "steelblue"
-            width: 2
-            height: 10
-            x: parent.width / 2 - width / 2
-        }
-
-        QuickEntity {
-            id: targetEntity
-            item: targetItem
-            speed: speedSlider.position * speedSlider.to
-        }
-    }
-
-    Rectangle {
-        id: destinationMarker
-        width: 10
-        height: width
-        color: "transparent"
-        border.color: "red"
-        radius: width / 2
     }
 
     function moveMarkerTo(x, y) {
@@ -97,8 +94,21 @@ ApplicationWindow {
         id: mouseArea
         anchors.fill: parent
         onPressed: {
-            moveMarkerTo(mouseX, mouseY);
-            currentPather.moveTo(targetEntity, Qt.point(mouseX, mouseY))
+            var targetX = mouseX;
+            var targetY = mouseY;
+
+            if (currentPather === gridPather) {
+                grid.resetColours();
+
+                // Make the target pos in the centre of a tile.
+                var column = Math.floor(targetX / gridPather.cellSize);
+                var row = Math.floor(targetY / gridPather.cellSize);
+                targetX = column * gridPather.cellSize + gridPather.cellSize / 2;
+                targetY = row * gridPather.cellSize + gridPather.cellSize / 2;
+            }
+
+            moveMarkerTo(targetX, targetY);
+            currentPather.moveTo(targetEntity, Qt.point(targetX, targetY))
         }
     }
 
@@ -130,41 +140,111 @@ ApplicationWindow {
         }
     }
 
+    Grid {
+        id: grid
+        columns: window.width / gridPather.cellSize
+        rows: window.height / gridPather.cellSize
+        anchors.fill: parent
+        visible: currentPather === gridPather
+
+        function resetColours() {
+            for (var row = 0; row < rows; ++row) {
+                for (var column = 0; column < columns; ++column) {
+                    var item = grid.childAt(
+                        column * gridPather.cellSize + gridPather.cellSize / 2,
+                        row * gridPather.cellSize + gridPather.cellSize / 2);
+                    if (item) {
+                        item.processed = false;
+                        item.open = false;
+                        item.chosen = false;
+                    }
+                }
+            }
+        }
+
+        Repeater {
+            model: grid.columns * grid.rows
+
+            Rectangle {
+                width: gridPather.cellSize
+                height: gridPather.cellSize
+                color: processed ? (open ? "blue" : "green") : "transparent"
+                opacity: !processed || chosen ? 1 : 0.25
+                border.color: processed ? "transparent" : "lightgray"
+
+                property bool processed: false
+                property bool open: false
+                property bool chosen: false
+            }
+        }
+    }
+
     Label {
         text: "Click to move item"
         opacity: 0.5
         anchors.centerIn: parent
     }
 
-    footer: RowLayout {
-        Label {
-            text: "Entity speed"
+    Rectangle {
+        id: targetItem
+        width: 20
+        height: 20
+        color: "blue"
+
+        Rectangle {
+            color: "steelblue"
+            width: 2
+            height: 10
+            x: parent.width / 2 - width / 2
         }
 
-        Slider {
-            id: speedSlider
-            from: 0
-            value: 50
-            to: 300
+        QuickEntity {
+            id: targetEntity
+            item: targetItem
+            speed: speedSlider.position * speedSlider.to
+        }
+    }
 
-            ToolTip {
-                parent: speedSlider.handle
-                visible: speedSlider.pressed
-                text: (speedSlider.position * speedSlider.to).toFixed(1)
+    Rectangle {
+        id: destinationMarker
+        width: 10
+        height: width
+        color: "transparent"
+        border.color: "red"
+        radius: width / 2
+    }
+
+    footer: ToolBar {
+        RowLayout {
+            Label {
+                text: "Entity speed"
             }
-        }
 
-        Item {
-            Layout.fillWidth: true
-        }
+            Slider {
+                id: speedSlider
+                from: 0
+                value: 50
+                to: 300
 
-        Label {
-            text: "Game timer paused"
-        }
+                ToolTip {
+                    parent: speedSlider.handle
+                    visible: speedSlider.pressed
+                    text: (speedSlider.position * speedSlider.to).toFixed(1)
+                }
+            }
 
-        Switch {
-            id: pauseSwitch
-            onCheckedChanged: gameTimer.togglePaused()
+            Item {
+                Layout.fillWidth: true
+            }
+
+            Label {
+                text: "Game timer paused"
+            }
+
+            Switch {
+                id: pauseSwitch
+                onCheckedChanged: gameTimer.togglePaused()
+            }
         }
     }
 }

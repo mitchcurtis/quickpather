@@ -14,7 +14,7 @@ class QuickEntity;
 class GridPathAgent
 {
 public:
-    GridPathAgent();
+    GridPathAgent(const QPointF &targetPos);
 
     virtual bool isPathComplete(const QuickEntity &entity, const QPointF &startPos, const GridPathNode &currentNode) const;
     virtual int calculateStartCost(const GridPathNode &node) const;

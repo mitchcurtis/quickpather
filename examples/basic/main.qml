@@ -11,7 +11,7 @@ ApplicationWindow {
     height: 480
     title: qsTr("Hello World")
 
-    property string currentPathType: "GridPather"
+    property string currentPathType: patherButtonGroup.checkedButton.text
     readonly property var currentPather: currentPathType == "DirectPather" ? directPather : gridPather
 
     Component.onCompleted: {
@@ -93,12 +93,15 @@ ApplicationWindow {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         onPressed: {
             var targetX = mouseX;
             var targetY = mouseY;
 
             if (currentPather === gridPather) {
-                grid.resetColours();
+                if (mouse.button === Qt.LeftButton) {
+                    grid.resetColours();
+                }
 
                 // Make the target pos in the centre of a tile.
                 var column = Math.floor(targetX / gridPather.cellSize);
@@ -107,13 +110,24 @@ ApplicationWindow {
                 targetY = row * gridPather.cellSize + gridPather.cellSize / 2;
             }
 
-            moveMarkerTo(targetX, targetY);
-            currentPather.moveTo(targetEntity, Qt.point(targetX, targetY))
+            if (mouse.button === Qt.LeftButton) {
+                moveMarkerTo(targetX, targetY);
+                currentPather.moveTo(targetEntity, Qt.point(targetX, targetY))
+            } else {
+                // add obstacle
+            }
         }
     }
 
     ButtonGroup {
-        id: buttonGroup
+        id: patherButtonGroup
+        buttons: patherColumnLayout.children
+    }
+
+    function switchPather(patherType) {
+        currentPather.cancel(targetEntity);
+        currentPathType = patherType;
+        resetScene();
     }
 
     Drawer {
@@ -121,21 +135,49 @@ ApplicationWindow {
         width: 0.3 * window.width
         height: window.height
 
-        ListView {
+        ColumnLayout {
+            id: patherColumnLayout
             anchors.fill: parent
-            model: ["DirectPather", "GridPather"]
-            delegate: RadioDelegate {
-                checked: currentPathType == modelData
-                text: modelData
+
+            RadioDelegate {
+                id: directPatherRadioDelegate
+                text: "DirectPather"
+
+                Layout.fillWidth: true
+
+                onClicked: switchPather(text)
+            }
+
+            Label {
+                text: "Moves an item directly towards a target, disregarding any obstacles"
+                color: "#666"
+                wrapMode: Label.Wrap
+
+                Layout.margins: directPatherRadioDelegate.padding
+                Layout.topMargin: 0
+                Layout.fillWidth: true
+            }
+
+            RadioDelegate {
+                text: "GridPather"
                 width: parent.width
+                checked: true
 
-                onClicked: {
-                    currentPather.cancel(targetEntity);
-                    currentPathType = modelData;
-                    resetScene();
-                }
+                Layout.fillWidth: true
+            }
 
-                ButtonGroup.group: buttonGroup
+            Label {
+                text: "Moves an item towards a target along a grid, moving around any static obstacles in its path"
+                color: "#666"
+                wrapMode: Label.Wrap
+
+                Layout.margins: directPatherRadioDelegate.padding
+                Layout.topMargin: 0
+                Layout.fillWidth: true
+            }
+
+            Item {
+                Layout.fillHeight: true
             }
         }
     }
@@ -179,10 +221,20 @@ ApplicationWindow {
         }
     }
 
-    Label {
-        text: "Click to move item"
-        opacity: 0.5
+    ColumnLayout {
         anchors.centerIn: parent
+
+        Label {
+            text: "Left click to move item"
+            opacity: 0.5
+            Layout.alignment: Qt.AlignHCenter
+        }
+
+        Label {
+            text: "Right click to add obstacles"
+            opacity: 0.5
+            Layout.alignment: Qt.AlignHCenter
+        }
     }
 
     Rectangle {

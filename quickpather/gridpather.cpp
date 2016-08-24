@@ -93,6 +93,7 @@ bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
     if (fmod(startPos.x() - mCellSize / 2, mCellSize) != 0 || fmod(startPos.y() - mCellSize / 2, mCellSize) != 0) {
         qDebug() << fmod(startPos.x(), mCellSize) << fmod(startPos.y(), mCellSize);
         qWarning() << "Currently incapable of dealing with non-cell-centered positions";
+        // (Users of this API should simply wait until the target is centered before moving)
         return false;
     }
 
@@ -121,9 +122,7 @@ bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
         node_it lowest = std::min_element(openList.begin(), openList.end(), totalScoreLessThan);
         // Switch it to the closed list.
         closedList.push_back(*lowest);
-#ifdef EXPOSE_VISUALISATION_API
-        emit nodeAddedToClosedList((*lowest)->pos());
-#endif
+        onNodeAddedToClosedList((*lowest)->pos());
         selectedNode = *lowest;
         openList.erase(lowest);
 
@@ -168,9 +167,7 @@ bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
                     adjNode->setTargetCost(pathAgent.calculateTargetCost(*adjNode));
 
                     openList.push_back(adjNode);
-#ifdef EXPOSE_VISUALISATION_API
-                    emit nodeAddedToOpenList(adjNode->pos());
-#endif
+                    onNodeAddedToOpenList(adjNode->pos());
                 }
             }
         }
@@ -193,9 +190,7 @@ bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
     QSharedPointer<GridPathNode> node = closedList.back();
     QVector<QSharedPointer<GridPathNode> > test;
     while(node) {
-#ifdef EXPOSE_VISUALISATION_API
-        emit nodeChosen(node->pos());
-#endif
+        onNodeChosen(node->pos());
 
         shortestPath.push_front(node);
         test.insert(test.begin(), node);

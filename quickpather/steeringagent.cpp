@@ -10,15 +10,26 @@ SteeringAgent::SteeringAgent(QObject *parent) :
 {
 }
 
+static const qreal lenience = 0.005;
+
 bool SteeringAgent::steerTo(AbstractEntity *entity, const QPointF &pos, qreal delta)
 {
-    if (!Utils::isNextToTargetPos(entity, pos)) {
+    // We want to get as close as possible...
+    if (!Utils::isNextToTargetPos(entity, pos, lenience)) {
         const qreal angleToTarget = Utils::directionTo(entity->centrePos(), pos) + 90;
         entity->setRotation(angleToTarget);
 
-        const QPointF newPos = Utils::moveBy(entity->centrePos(), angleToTarget, entity->speed() * delta);
+        // ... without stopping too early. It's OK if we overshoot the target
+        // with the "entity->speed() * delta" calculation, because we choose the
+        // remaining distance instead in that case.
+        qreal moveDistance = entity->speed() * delta;
+        const QLineF lineToTarget(entity->centrePos(), pos);
+        if (lineToTarget.length() < moveDistance) {
+             moveDistance = lineToTarget.length();
+        }
+        const QPointF newPos = Utils::moveBy(entity->centrePos(), angleToTarget, moveDistance);
         entity->setCentrePos(newPos);
-        return false;
+        return Utils::isNextToTargetPos(entity, pos, lenience);
     }
 
     return true;

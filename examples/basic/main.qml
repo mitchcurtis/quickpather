@@ -4,6 +4,8 @@ import QtQuick.Controls 2.0
 
 import QuickPath 1.0
 
+import Example 1.0
+
 ApplicationWindow {
     id: window
     visible: true
@@ -33,9 +35,15 @@ ApplicationWindow {
         timer: gameTimer
     }
 
+    HackyPassabilityAgent {
+        id: hackyPassabilityAgent
+        gridItem: grid
+    }
+
     QuickGridPather {
         id: gridPather
         timer: gameTimer
+        passabilityAgent: hackyPassabilityAgent
 
         onNodeAddedToClosedList: {
             var item = grid.childAt(centrePos.x, centrePos.y);
@@ -114,7 +122,10 @@ ApplicationWindow {
                 moveMarkerTo(targetX, targetY);
                 currentPather.moveTo(targetEntity, Qt.point(targetX, targetY))
             } else {
-                // add obstacle
+                var item = grid.childAt(targetX, targetY);
+                if (item) {
+                    item.blocksMovement = true;
+                }
             }
         }
     }
@@ -208,15 +219,17 @@ ApplicationWindow {
             model: grid.columns * grid.rows
 
             Rectangle {
+                objectName: "tile" + index
                 width: gridPather.cellSize
                 height: gridPather.cellSize
-                color: processed ? (open ? "blue" : "green") : "transparent"
+                color: processed ? (open ? "blue" : "green") : (blocksMovement ? "red" : "transparent")
                 opacity: !processed || chosen ? 1 : 0.25
                 border.color: processed ? "transparent" : "lightgray"
 
                 property bool processed: false
                 property bool open: false
                 property bool chosen: false
+                property bool blocksMovement: false
             }
         }
     }

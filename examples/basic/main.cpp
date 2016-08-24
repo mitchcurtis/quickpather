@@ -6,6 +6,8 @@
 #include "quickentity.h"
 #include "quickgridpather.h"
 
+#include "hackypassabilityagent.h"
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -14,6 +16,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<QuickDirectPather>("QuickPath", 1, 0, "QuickDirectPather");
     qmlRegisterType<QuickGridPather>("QuickPath", 1, 0, "QuickGridPather");
     qmlRegisterType<QuickEntity>("QuickPath", 1, 0, "QuickEntity");
+
+    qmlRegisterType<HackyPassabilityAgent>("Example", 1, 0, "HackyPassabilityAgent");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

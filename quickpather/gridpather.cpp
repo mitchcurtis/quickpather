@@ -4,6 +4,7 @@
 #include <QLoggingCategory>
 #include <QQuickItem>
 
+#include "abstractpassabilityagent.h"
 #include "entity.h"
 #include "gametimer.h"
 #include "gridpathagent.h"
@@ -41,16 +42,9 @@ GridPather::GridPather(QObject *parent) :
     QObject(parent),
     mCellSize(32),
     mTimer(nullptr),
-    mSteeringAgent(new SteeringAgent(this))
+    mSteeringAgent(new SteeringAgent(this)),
+    mPassabilityAgent(nullptr)
 {
-}
-
-// TODO: abstract class
-static bool isPassable(const QPointF &pos, AbstractEntity *entity)
-{
-    Q_UNUSED(pos);
-    Q_UNUSED(entity);
-    return true;
 }
 
 static int iterationLimit = 1000;
@@ -83,8 +77,13 @@ bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
         return false;
     }
 
+    if (!mPassabilityAgent) {
+        qWarning() << "No passability agent set";
+        return false;
+    }
+
     const QPointF startPos = entity->centrePos();
-    if (!isPassable(startPos, entity)) {
+    if (!mPassabilityAgent->isPassable(startPos, entity)) {
         qCDebug(lcGridPather) << "Starting position" << pos << "isn't passable for" << entity;
         return false;
     }
@@ -138,7 +137,7 @@ bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
 
             QSharedPointer<GridPathNode> adjNode(new GridPathNode(nodePos));
 
-            bool walkable = isPassable(adjNode->pos(), entity/*, &boundsEnlargement*/);
+            bool walkable = mPassabilityAgent->isPassable(adjNode->pos(), entity/*, &boundsEnlargement*/);
             bool isOnClosedList = std::find_if(closedList.begin(), closedList.end(),
                 PathNodePosComp(adjNode)) != closedList.end();
 
@@ -257,6 +256,26 @@ void GridPather::setTimer(GameTimer *timer)
         connect(mTimer, &GameTimer::updated, this, &GridPather::timerUpdated);
 }
 
+AbstractPassabilityAgent *GridPather::passabilityAgent()
+{
+    return mPassabilityAgent;
+}
+
+void GridPather::setPassabilityAgent(AbstractPassabilityAgent *passabilityAgent)
+{
+    if (!mData.isEmpty()) {
+        qWarning() << "Cannot set passability agent while pathing active";
+        return;
+    }
+
+    if (passabilityAgent == mPassabilityAgent)
+        return;
+
+    AbstractPassabilityAgent *oldAgent = mPassabilityAgent;
+    mPassabilityAgent = passabilityAgent;
+    onPassabilityAgentChanged(oldAgent, mPassabilityAgent);
+}
+
 GridPathData GridPather::pathData(AbstractEntity *entity) const
 {
     GridPathData data;
@@ -286,6 +305,10 @@ void GridPather::onCellSizeChanged(int, int)
 }
 
 void GridPather::onTimerChanged(GameTimer *, GameTimer *)
+{
+}
+
+void GridPather::onPassabilityAgentChanged(AbstractPassabilityAgent *, AbstractPassabilityAgent *)
 {
 }
 

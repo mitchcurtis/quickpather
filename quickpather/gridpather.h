@@ -11,6 +11,7 @@
 #include "gridpathnode.h"
 
 class AbstractEntity;
+class AbstractPassabilityAgent;
 class GameTimer;
 class SteeringAgent;
 
@@ -53,10 +54,14 @@ public:
 protected:
     virtual void onCellSizeChanged(int oldCellSize, int newCellSize);
     virtual void onTimerChanged(GameTimer *oldTimer, GameTimer *newTimer);
+    virtual void onPassabilityAgentChanged(AbstractPassabilityAgent *oldAgent, AbstractPassabilityAgent *newAgent);
 
     virtual void onNodeAddedToClosedList(const QPointF &centrePos);
     virtual void onNodeAddedToOpenList(const QPointF &centrePos);
     virtual void onNodeChosen(const QPointF &centrePos);
+
+    AbstractPassabilityAgent *passabilityAgent();
+    void setPassabilityAgent(AbstractPassabilityAgent *passabilityAgent);
 
 private slots:
     void timerUpdated(qreal delta);
@@ -65,6 +70,7 @@ private:
     int mCellSize;
     GameTimer *mTimer;
     SteeringAgent *mSteeringAgent;
+    AbstractPassabilityAgent *mPassabilityAgent;
     QHash<AbstractEntity*, GridPathData> mData;
 };
 

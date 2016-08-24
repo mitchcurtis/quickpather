@@ -5,6 +5,7 @@
 QuickGridPather::QuickGridPather(QObject *parent) :
     GridPather(parent)
 {
+    setQuickPassabilityAgent(&mPassabilityAgent);
 }
 
 void QuickGridPather::moveTo(QuickEntity *entity, const QPointF &pos)
@@ -17,6 +18,16 @@ void QuickGridPather::cancel(QuickEntity *entity)
     cancelEntityMovement(entity);
 }
 
+QuickPassabilityAgent *QuickGridPather::quickPassabilityAgent()
+{
+    return reinterpret_cast<QuickPassabilityAgent*>(&mPassabilityAgent);
+}
+
+void QuickGridPather::setQuickPassabilityAgent(QuickPassabilityAgent *passabilityAgent)
+{
+    setPassabilityAgent(passabilityAgent);
+}
+
 void QuickGridPather::onCellSizeChanged(int, int)
 {
     emit cellSizeChanged();
@@ -25,6 +36,11 @@ void QuickGridPather::onCellSizeChanged(int, int)
 void QuickGridPather::onTimerChanged(GameTimer *, GameTimer *)
 {
     emit timerChanged();
+}
+
+void QuickGridPather::onPassabilityAgentChanged(AbstractPassabilityAgent *, AbstractPassabilityAgent *)
+{
+    emit passabilityAgentChanged();
 }
 
 #ifdef EXPOSE_VISUALISATION_API

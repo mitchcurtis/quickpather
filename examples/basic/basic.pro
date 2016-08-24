@@ -3,7 +3,8 @@ TEMPLATE = app
 QT += qml quick
 CONFIG += c++11
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    hackypassabilityagent.cpp
 
 RESOURCES += qml.qrc
 
@@ -27,3 +28,6 @@ win32 {
 
 MOC_DIR = .moc
 OBJECTS_DIR = .obj
+
+HEADERS += \
+    hackypassabilityagent.h

@@ -8,8 +8,8 @@
 #include <QPointF>
 #include <QVector>
 
+class AbstractEntity;
 class GameTimer;
-class QuickEntity;
 class SteeringAgent;
 
 class DirectPathData
@@ -21,19 +21,18 @@ public:
 class QUICKPATHERSHARED_EXPORT DirectPather : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
 
 public:
-    DirectPather();
+    explicit DirectPather(QObject *parent = nullptr);
 
-    Q_INVOKABLE void moveTo(QuickEntity *entity, const QPointF &pos);
-    Q_INVOKABLE void cancel(QuickEntity *entity);
+    void moveEntityTo(AbstractEntity *entity, const QPointF &pos);
+    void cancelEntityMovement(AbstractEntity *entity);
 
     GameTimer *timer() const;
     void setTimer(GameTimer *timer);
 
-signals:
-    void timerChanged();
+protected:
+    virtual void onTimerChanged(GameTimer *oldTimer, GameTimer *newTimer);
 
 private slots:
     void timerUpdated(qreal delta);
@@ -41,7 +40,7 @@ private slots:
 private:
     GameTimer *mTimer;
     SteeringAgent *mSteeringAgent;
-    QHash<QuickEntity*, DirectPathData> mData;
+    QHash<AbstractEntity*, DirectPathData> mData;
 };
 
 #endif // DIRECTPATHER_H

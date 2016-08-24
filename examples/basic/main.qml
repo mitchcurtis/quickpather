@@ -28,12 +28,12 @@ ApplicationWindow {
         id: gameTimer
     }
 
-    DirectPather {
+    QuickDirectPather {
         id: directPather
         timer: gameTimer
     }
 
-    GridPather {
+    QuickGridPather {
         id: gridPather
         timer: gameTimer
 

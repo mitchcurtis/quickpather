@@ -25,6 +25,5 @@ win32 {
     LIBS += -L"../../quickpather" -lquickpather
 }
 
-
 MOC_DIR = .moc
 OBJECTS_DIR = .obj

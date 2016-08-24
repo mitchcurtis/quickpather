@@ -2,7 +2,7 @@
 
 #include <QQuickItem>
 
-#include "quickentity.h"
+#include "abstractentity.h"
 #include "utils.h"
 
 SteeringAgent::SteeringAgent(QObject *parent) :
@@ -10,15 +10,14 @@ SteeringAgent::SteeringAgent(QObject *parent) :
 {
 }
 
-bool SteeringAgent::steerTo(QuickEntity *entity, const QPointF &pos, qreal delta)
+bool SteeringAgent::steerTo(AbstractEntity *entity, const QPointF &pos, qreal delta)
 {
-    QQuickItem *item = entity->item();
     if (!Utils::isNextToTargetPos(entity, pos)) {
-        const qreal angleToTarget = Utils::directionTo(Utils::centrePosition(item), pos) + 90;
-        item->setRotation(angleToTarget);
+        const qreal angleToTarget = Utils::directionTo(entity->centrePos(), pos) + 90;
+        entity->setRotation(angleToTarget);
 
-        const QPointF newPos = Utils::moveBy(item->position(), angleToTarget, entity->speed() * delta);
-        item->setPosition(newPos);
+        const QPointF newPos = Utils::moveBy(entity->centrePos(), angleToTarget, entity->speed() * delta);
+        entity->setCentrePos(newPos);
         return false;
     }
 

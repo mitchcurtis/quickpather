@@ -8,15 +8,15 @@ class QVector;
 template <typename T>
 class QSharedPointer;
 
+class AbstractEntity;
 class GridPathNode;
-class QuickEntity;
 
 class GridPathAgent
 {
 public:
     GridPathAgent(const QPointF &targetPos);
 
-    virtual bool isPathComplete(const QuickEntity &entity, const QPointF &startPos, const GridPathNode &currentNode) const;
+    virtual bool isPathComplete(const AbstractEntity &entity, const QPointF &startPos, const GridPathNode &currentNode) const;
     virtual int calculateStartCost(const GridPathNode &node) const;
     virtual int calculateTargetCost(const GridPathNode &node) const;
     /*!

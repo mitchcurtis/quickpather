@@ -4,15 +4,41 @@
 #include <QLoggingCategory>
 #include <QQuickItem>
 
+#include "entity.h"
 #include "gametimer.h"
 #include "gridpathagent.h"
-#include "quickentity.h"
 #include "steeringagent.h"
 #include "utils.h"
 
 Q_LOGGING_CATEGORY(lcGridPather, "quickpather.gridpather")
 
-GridPather::GridPather() :
+GridPathData::GridPathData() :
+    mCurrentNodeIndex(-1)
+{
+}
+
+bool GridPathData::isValid() const
+{
+    return mCurrentNodeIndex != -1;
+}
+
+QPointF GridPathData::targetPos() const
+{
+    return mTargetPos;
+}
+
+QVector<QSharedPointer<GridPathNode> > GridPathData::nodes() const
+{
+    return mNodes;
+}
+
+int GridPathData::currentNodeIndex() const
+{
+    return mCurrentNodeIndex;
+}
+
+GridPather::GridPather(QObject *parent) :
+    QObject(parent),
     mCellSize(32),
     mTimer(nullptr),
     mSteeringAgent(new SteeringAgent(this))
@@ -20,7 +46,7 @@ GridPather::GridPather() :
 }
 
 // TODO: abstract class
-static bool isPassable(const QPointF &pos, QuickEntity *entity)
+static bool isPassable(const QPointF &pos, AbstractEntity *entity)
 {
     Q_UNUSED(pos);
     Q_UNUSED(entity);
@@ -45,16 +71,16 @@ const QPointF straightDirections[qtyStraightDirections] = {
     north, south, east, west
 };
 
-void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
+void GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
 {
     if (!mTimer) {
         qWarning() << "No timer set";
         return;
     }
 
-    const QPointF startPos = Utils::centrePosition(entity->item());
+    const QPointF startPos = entity->centrePos();
     if (!isPassable(startPos, entity)) {
-        qCDebug(lcGridPather) << "Starting position" << pos << "isn't passable for" << entity->item();
+        qCDebug(lcGridPather) << "Starting position" << pos << "isn't passable for" << entity;
         return;
     }
 
@@ -146,7 +172,7 @@ void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
     }
 
     if(closedList.empty()) {
-        qCDebug(lcGridPather) << "Impossible for" << entity->item() << "to reach target pos" << pos;
+        qCDebug(lcGridPather) << "Impossible for" << entity << "to reach target pos" << pos;
         return;
     }
 
@@ -169,15 +195,15 @@ void GridPather::moveTo(QuickEntity *entity, const QPointF &pos)
     }
 
     GridPathData pathData;
-    pathData.targetPos = pos;
-    pathData.nodes = shortestPath;
-    pathData.currentNodeIndex = 0;
+    pathData.mTargetPos = pos;
+    pathData.mNodes = shortestPath;
+    pathData.mCurrentNodeIndex = 0;
     mData.insert(entity, pathData);
 
-    qCDebug(lcGridPather) << "Successfully found path (" << shortestPath.size() << "nodes) for" << entity->item() << "to target pos" << pos;
+    qCDebug(lcGridPather) << "Successfully found path (" << shortestPath.size() << "nodes) for" << entity << "to target pos" << pos;
 }
 
-void GridPather::cancel(QuickEntity *entity)
+void GridPather::cancelEntityMovement(AbstractEntity *entity)
 {
     mData.remove(entity);
 }
@@ -197,8 +223,9 @@ void GridPather::setCellSize(int cellSize)
     if (cellSize == mCellSize)
         return;
 
+    const int oldCellSize = mCellSize;
     mCellSize = cellSize;
-    emit cellSizeChanged();
+    onCellSizeChanged(oldCellSize, mCellSize);
 }
 
 GameTimer *GridPather::timer() const
@@ -214,27 +241,59 @@ void GridPather::setTimer(GameTimer *timer)
     if (mTimer)
         mTimer->disconnect(this);
 
+    GameTimer *oldTimer = mTimer;
     mTimer = timer;
+    onTimerChanged(oldTimer, mTimer);
 
     if (mTimer)
         connect(mTimer, &GameTimer::updated, this, &GridPather::timerUpdated);
+}
 
-    emit timerChanged();
+GridPathData GridPather::pathData(AbstractEntity *entity) const
+{
+    GridPathData data;
+
+    auto dataIt = mData.constFind(entity);
+    if (dataIt != mData.constEnd()) {
+        data = *dataIt;
+    }
+
+    return data;
+}
+
+void GridPather::onNodeAddedToClosedList(const QPointF &)
+{
+}
+
+void GridPather::onNodeAddedToOpenList(const QPointF &)
+{
+}
+
+void GridPather::onNodeChosen(const QPointF &)
+{
+}
+
+void GridPather::onCellSizeChanged(int, int)
+{
+}
+
+void GridPather::onTimerChanged(GameTimer *, GameTimer *)
+{
 }
 
 void GridPather::timerUpdated(qreal delta)
 {
-    QHashIterator<QuickEntity*, GridPathData> it(mData);
+    QHashIterator<AbstractEntity*, GridPathData> it(mData);
     while (it.hasNext()) {
         it.next();
-        QuickEntity *entity = it.key();
+        AbstractEntity *entity = it.key();
 
         GridPathData &pathData = mData[entity];
-        if (pathData.currentNodeIndex < pathData.nodes.size()) {
-            const GridPathNode currentNode = *pathData.nodes.at(pathData.currentNodeIndex);
+        if (pathData.mCurrentNodeIndex < pathData.mNodes.size()) {
+            const GridPathNode currentNode = *pathData.mNodes.at(pathData.mCurrentNodeIndex);
             if (mSteeringAgent->steerTo(entity, currentNode.pos(), delta)) {
                 // We've reached the current node.
-                ++pathData.currentNodeIndex;
+                ++pathData.mCurrentNodeIndex;
             }
         } else {
             mData.remove(entity);

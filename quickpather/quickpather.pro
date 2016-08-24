@@ -14,7 +14,11 @@ HEADERS += \
     utils.h \
     gridpathnode.h \
     gridpathagent.h \
-    steeringagent.h
+    steeringagent.h \
+    entity.h \
+    abstractentity.h \
+    quickgridpather.h \
+    quickdirectpather.h
 
 SOURCES += \
     gametimer.cpp \
@@ -23,4 +27,7 @@ SOURCES += \
     gridpather.cpp \
     gridpathnode.cpp \
     gridpathagent.cpp \
-    steeringagent.cpp
+    steeringagent.cpp \
+    entity.cpp \
+    quickgridpather.cpp \
+    quickdirectpather.cpp

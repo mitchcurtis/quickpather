@@ -1,21 +1,20 @@
-#ifndef QUICKENTITY_H
-#define QUICKENTITY_H
+#ifndef ENTITY_H
+#define ENTITY_H
 
 #include <QObject>
+#include <QPointF>
 
 #include "abstractentity.h"
-#include "quickpather_global.h"
 
-class QQuickItem;
-
-class QUICKPATHERSHARED_EXPORT QuickEntity : public QObject, public AbstractEntity
+class QUICKPATHERSHARED_EXPORT Entity : public QObject, public AbstractEntity
 {
     Q_OBJECT
-    Q_PROPERTY(QQuickItem *item READ item WRITE setItem NOTIFY itemChanged)
+    Q_PROPERTY(QPointF centrePos READ centrePos WRITE setCentrePos NOTIFY centrePosChanged)
     Q_PROPERTY(qreal speed READ speed WRITE setSpeed NOTIFY speedChanged)
+    Q_PROPERTY(qreal rotation READ rotation WRITE setRotation NOTIFY rotationChanged)
 
 public:
-    explicit QuickEntity(QObject *parent = 0);
+    explicit Entity(QObject *parent = 0);
 
     virtual QPointF centrePos() const override;
     virtual void setCentrePos(const QPointF &centrePos) override;
@@ -26,18 +25,17 @@ public:
     virtual qreal rotation() const override;
     virtual void setRotation(qreal rotation) override;
 
-    QQuickItem *item() const;
-    void setItem(QQuickItem *item);
-
 signals:
     void centrePosChanged();
     void speedChanged();
     void rotationChanged();
-    void itemChanged();
+
+public slots:
 
 private:
-    QQuickItem *mItem;
+    QPointF mCentrePos;
     qreal mSpeed;
+    qreal mRotation;
 };
 
-#endif // QUICKENTITY_H
+#endif // ENTITY_H

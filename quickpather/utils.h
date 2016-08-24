@@ -26,6 +26,11 @@ namespace Utils {
         return item->position() + QPointF(item->width() / 2.0, item->height() / 2.0);
     }
 
+    inline QPointF topLeftFromCentrePosition(const QQuickItem *item, const QPointF &centrePos)
+    {
+        return centrePos - QPointF(item->width() / 2.0, item->height() / 2.0);
+    }
+
     inline qreal directionTo(const QPointF &source, const QPointF &target) {
         QPointF toTarget(target.x() - source.x(), target.y() - source.y());
         qreal facingTarget = Utils::clampAngle(qRadiansToDegrees(atan2(toTarget.y(), toTarget.x())));
@@ -47,11 +52,11 @@ namespace Utils {
         return QPoint(::abs(point.x()), ::abs(point.y()));
     }
 
-    inline bool isNextToTargetPos(QuickEntity *entity, const QPointF &targetPos, qreal targetLeniency = -1)
+    inline bool isNextToTargetPos(AbstractEntity *entity, const QPointF &targetPos, qreal targetLeniency = -1)
     {
         if (targetLeniency == -1)
             targetLeniency = qMax(1.0, entity->speed() * 0.05);
-        return Utils::fuzzyCompare(Utils::centrePosition(entity->item()), targetPos, targetLeniency);
+        return Utils::fuzzyCompare(entity->centrePos(), targetPos, targetLeniency);
     }
 
     inline bool isNextToTargetPos(const QPointF &entityCentrePos, const QPointF &targetPos, qreal entitySpeed, qreal targetLeniency = -1)

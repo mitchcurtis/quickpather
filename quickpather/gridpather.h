@@ -10,31 +10,37 @@
 
 #include "gridpathnode.h"
 
-#define EXPOSE_VISUALISATION_API
-
+class AbstractEntity;
 class GameTimer;
-class QuickEntity;
 class SteeringAgent;
 
 class GridPathData
 {
 public:
-    QPointF targetPos;
-    QVector<QSharedPointer<GridPathNode> > nodes;
-    int currentNodeIndex;
+    GridPathData();
+
+    bool isValid() const;
+
+    QPointF targetPos() const;
+    QVector<QSharedPointer<GridPathNode> > nodes() const;
+    int currentNodeIndex() const;
+private:
+    friend class GridPather;
+
+    QPointF mTargetPos;
+    QVector<QSharedPointer<GridPathNode> > mNodes;
+    int mCurrentNodeIndex;
 };
 
 class QUICKPATHERSHARED_EXPORT GridPather : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int cellSize READ cellSize WRITE setCellSize NOTIFY cellSizeChanged)
-    Q_PROPERTY(GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
 
 public:
-    GridPather();
+    explicit GridPather(QObject *parent = nullptr);
 
-    Q_INVOKABLE void moveTo(QuickEntity *entity, const QPointF &pos);
-    Q_INVOKABLE void cancel(QuickEntity *entity);
+    void moveEntityTo(AbstractEntity *entity, const QPointF &pos);
+    void cancelEntityMovement(AbstractEntity *entity);
 
     int cellSize() const;
     void setCellSize(int cellSize);
@@ -42,15 +48,15 @@ public:
     GameTimer *timer() const;
     void setTimer(GameTimer *timer);
 
-signals:
-    void cellSizeChanged();
-    void timerChanged();
+    GridPathData pathData(AbstractEntity *entity) const;
 
-#ifdef EXPOSE_VISUALISATION_API
-    void nodeAddedToClosedList(const QPointF &centrePos);
-    void nodeAddedToOpenList(const QPointF &centrePos);
-    void nodeChosen(const QPointF &centrePos);
-#endif
+protected:
+    virtual void onCellSizeChanged(int oldCellSize, int newCellSize);
+    virtual void onTimerChanged(GameTimer *oldTimer, GameTimer *newTimer);
+
+    virtual void onNodeAddedToClosedList(const QPointF &centrePos);
+    virtual void onNodeAddedToOpenList(const QPointF &centrePos);
+    virtual void onNodeChosen(const QPointF &centrePos);
 
 private slots:
     void timerUpdated(qreal delta);
@@ -59,7 +65,7 @@ private:
     int mCellSize;
     GameTimer *mTimer;
     SteeringAgent *mSteeringAgent;
-    QHash<QuickEntity*, GridPathData> mData;
+    QHash<AbstractEntity*, GridPathData> mData;
 };
 
 #endif // GRIDPATHER_H

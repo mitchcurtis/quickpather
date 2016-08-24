@@ -5,7 +5,7 @@
 
 class QPointF;
 
-class QuickEntity;
+class AbstractEntity;
 
 class SteeringAgent : public QObject
 {
@@ -14,7 +14,7 @@ class SteeringAgent : public QObject
 public:
     SteeringAgent(QObject *parent = nullptr);
 
-    bool steerTo(QuickEntity *entity, const QPointF &pos, qreal delta);
+    bool steerTo(AbstractEntity *entity, const QPointF &pos, qreal delta);
 };
 
 #endif // STEERINGAGENT_H

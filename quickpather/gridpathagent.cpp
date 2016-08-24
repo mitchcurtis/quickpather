@@ -1,5 +1,6 @@
 #include "gridpathagent.h"
 
+#include "abstractentity.h"
 #include "gridpathnode.h"
 #include "utils.h"
 
@@ -8,7 +9,7 @@ GridPathAgent::GridPathAgent(const QPointF &targetPos) :
 {
 }
 
-bool GridPathAgent::isPathComplete(const QuickEntity &entity, const QPointF &, const GridPathNode &currentNode) const
+bool GridPathAgent::isPathComplete(const AbstractEntity &entity, const QPointF &, const GridPathNode &currentNode) const
 {
     return Utils::isNextToTargetPos(currentNode.pos(), mTargetPos, entity.speed());
 }

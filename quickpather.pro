@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     quickpather \
-    examples
+    examples \
+    tests

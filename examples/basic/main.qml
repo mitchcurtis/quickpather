@@ -47,7 +47,7 @@ ApplicationWindow {
 
         onNodeAddedToClosedList: {
             var item = grid.childAt(centrePos.x, centrePos.y);
-            if (item) {
+            if (item && !item.blocksMovement) {
                 item.processed = true;
                 item.open = false;
             }
@@ -55,7 +55,7 @@ ApplicationWindow {
 
         onNodeAddedToOpenList: {
             var item = grid.childAt(centrePos.x, centrePos.y);
-            if (item) {
+            if (item && !item.blocksMovement) {
                 item.processed = true;
                 item.open = true;
             }
@@ -125,6 +125,8 @@ ApplicationWindow {
                 var item = grid.childAt(targetX, targetY);
                 if (item) {
                     item.blocksMovement = true;
+                    // TODO: why do we need to do this so that the red shows up?
+                    grid.resetColours();
                 }
             }
         }

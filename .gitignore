@@ -28,5 +28,5 @@ qrc_*.cpp
 *.sav
 *.directory
 
-app/tshnm
-app/debug/
+quickpather/debug/
+tests/auto/quickpather/debug/

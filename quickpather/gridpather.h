@@ -38,6 +38,7 @@ private:
 class QUICKPATHERSHARED_EXPORT GridPather : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int cellSize READ cellSize WRITE setCellSize NOTIFY cellSizeChanged)
     Q_PROPERTY(QuickPather::GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
     Q_PROPERTY(QuickPather::PassabilityAgent *passabilityAgent READ passabilityAgent WRITE setPassabilityAgent NOTIFY passabilityAgentChanged)
 
@@ -59,6 +60,7 @@ public:
     void setPassabilityAgent(PassabilityAgent *passabilityAgent);
 
 signals:
+    void cellSizeChanged();
     void passabilityAgentChanged();
     void timerChanged();
 

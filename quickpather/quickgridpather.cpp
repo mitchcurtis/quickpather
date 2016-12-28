@@ -19,11 +19,6 @@ void QuickGridPather::cancel(QuickEntity *entity)
     cancelEntityMovement(entity);
 }
 
-void QuickGridPather::onCellSizeChanged(int, int)
-{
-    emit cellSizeChanged();
-}
-
 #ifdef EXPOSE_VISUALISATION_API
 void QuickGridPather::onNodeAddedToClosedList(const QPointF &centrePos)
 {

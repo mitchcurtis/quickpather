@@ -234,9 +234,8 @@ void GridPather::setCellSize(int cellSize)
     if (cellSize == mCellSize)
         return;
 
-    const int oldCellSize = mCellSize;
     mCellSize = cellSize;
-    onCellSizeChanged(oldCellSize, mCellSize);
+    emit cellSizeChanged();
 }
 
 GameTimer *GridPather::timer() const

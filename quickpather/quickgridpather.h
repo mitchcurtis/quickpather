@@ -13,7 +13,6 @@ class QuickEntity;
 class QUICKPATHERSHARED_EXPORT QuickGridPather : public GridPather
 {
     Q_OBJECT
-    Q_PROPERTY(int cellSize READ cellSize WRITE setCellSize NOTIFY cellSizeChanged)
 
 public:
     explicit QuickGridPather(QObject *parent = 0);
@@ -22,8 +21,6 @@ public:
     Q_INVOKABLE void cancel(QuickPather::QuickEntity *entity);
 
 protected:
-    virtual void onCellSizeChanged(int oldCellSize, int newCellSize) override;
-
 #ifdef EXPOSE_VISUALISATION_API
     virtual void onNodeAddedToClosedList(const QPointF &centrePos);
     virtual void onNodeAddedToOpenList(const QPointF &centrePos);
@@ -31,8 +28,6 @@ protected:
 #endif
 
 signals:
-    void cellSizeChanged();
-
 #ifdef EXPOSE_VISUALISATION_API
     void nodeAddedToClosedList(const QPointF &centrePos);
     void nodeAddedToOpenList(const QPointF &centrePos);

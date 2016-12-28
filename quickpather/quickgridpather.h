@@ -6,15 +6,17 @@
 
 #define EXPOSE_VISUALISATION_API
 
+namespace QuickPather {
+
 class QuickEntity;
 
 class QUICKPATHERSHARED_EXPORT QuickGridPather : public GridPather
 {
     Q_OBJECT
     Q_PROPERTY(int cellSize READ cellSize WRITE setCellSize NOTIFY cellSizeChanged)
-    Q_PROPERTY(GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
+    Q_PROPERTY(QuickPather::GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
     // TODO: hacky(?)
-    Q_PROPERTY(QuickPassabilityAgent *passabilityAgent READ quickPassabilityAgent WRITE setQuickPassabilityAgent NOTIFY passabilityAgentChanged)
+    Q_PROPERTY(QuickPather::QuickPassabilityAgent *passabilityAgent READ quickPassabilityAgent WRITE setQuickPassabilityAgent NOTIFY passabilityAgentChanged)
 
 public:
     explicit QuickGridPather(QObject *parent = 0);
@@ -50,5 +52,7 @@ signals:
 private:
     QuickPassabilityAgent mPassabilityAgent;
 };
+
+}
 
 #endif // QUICKGRIDPATHER_H

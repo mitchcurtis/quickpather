@@ -4,6 +4,8 @@
 #include "gridpathnode.h"
 #include "utils.h"
 
+namespace QuickPather {
+
 GridPathAgent::GridPathAgent(const QPointF &targetPos) :
     mTargetPos(targetPos)
 {
@@ -32,4 +34,6 @@ void GridPathAgent::onPathComplete(QVector<QSharedPointer<GridPathNode> > &path)
     if (mExcludeFirstNode) {
         path.pop_front();
     }
+}
+
 }

@@ -10,6 +10,8 @@
 
 #include "gridpathnode.h"
 
+namespace QuickPather {
+
 class AbstractEntity;
 class AbstractPassabilityAgent;
 class GameTimer;
@@ -73,5 +75,7 @@ private:
     AbstractPassabilityAgent *mPassabilityAgent;
     QHash<AbstractEntity*, GridPathData> mData;
 };
+
+}
 
 #endif // GRIDPATHER_H

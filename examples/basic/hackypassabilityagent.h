@@ -5,7 +5,7 @@
 
 class QQuickItem;
 
-class HackyPassabilityAgent : public QuickPassabilityAgent
+class HackyPassabilityAgent : public QuickPather::QuickPassabilityAgent
 {
     Q_OBJECT
     Q_PROPERTY(QQuickItem *gridItem READ gridItem WRITE setGridItem NOTIFY gridItemChanged)
@@ -13,7 +13,7 @@ class HackyPassabilityAgent : public QuickPassabilityAgent
 public:
     HackyPassabilityAgent();
 
-    virtual bool isPassable(const QPointF &pos, AbstractEntity *entity);
+    virtual bool isPassable(const QPointF &pos, QuickPather::AbstractEntity *entity);
 
     QQuickItem *gridItem() const;
     void setGridItem(QQuickItem *gridItem);

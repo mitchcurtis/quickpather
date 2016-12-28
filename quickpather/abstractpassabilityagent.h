@@ -5,6 +5,8 @@
 
 #include "quickpather_global.h"
 
+namespace QuickPather {
+
 class AbstractEntity;
 
 class QUICKPATHERSHARED_EXPORT AbstractPassabilityAgent
@@ -12,5 +14,7 @@ class QUICKPATHERSHARED_EXPORT AbstractPassabilityAgent
 public:
     virtual bool isPassable(const QPointF &pos, AbstractEntity *entity) = 0;
 };
+
+}
 
 #endif // ABSTRACTPASSABILITYAGENT_H

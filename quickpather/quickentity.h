@@ -8,6 +8,8 @@
 
 class QQuickItem;
 
+namespace QuickPather {
+
 class QUICKPATHERSHARED_EXPORT QuickEntity : public QObject, public AbstractEntity
 {
     Q_OBJECT
@@ -39,5 +41,7 @@ private:
     QQuickItem *mItem;
     qreal mSpeed;
 };
+
+}
 
 #endif // QUICKENTITY_H

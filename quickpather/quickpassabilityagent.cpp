@@ -1,5 +1,7 @@
 #include "quickpassabilityagent.h"
 
+namespace QuickPather {
+
 QuickPassabilityAgent::QuickPassabilityAgent()
 {
 }
@@ -7,4 +9,6 @@ QuickPassabilityAgent::QuickPassabilityAgent()
 bool QuickPassabilityAgent::isPassable(const QPointF &, AbstractEntity *)
 {
     return true;
+}
+
 }

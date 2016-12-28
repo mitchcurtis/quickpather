@@ -9,6 +9,8 @@
 #include "steeringagent.h"
 #include "utils.h"
 
+namespace QuickPather {
+
 DirectPather::DirectPather(QObject *parent) :
     QObject(parent),
     mTimer(nullptr),
@@ -75,4 +77,6 @@ void DirectPather::timerUpdated(qreal delta)
             mData.remove(entity);
         }
     }
+}
+
 }

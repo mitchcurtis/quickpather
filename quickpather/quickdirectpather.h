@@ -3,12 +3,14 @@
 
 #include "directpather.h"
 
+namespace QuickPather {
+
 class QuickEntity;
 
 class QUICKPATHERSHARED_EXPORT QuickDirectPather : public DirectPather
 {
     Q_OBJECT
-    Q_PROPERTY(GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
+    Q_PROPERTY(QuickPather::GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
 
 public:
     explicit QuickDirectPather(QObject *parent = 0);
@@ -23,5 +25,6 @@ signals:
     void timerChanged();
 };
 
+}
 
 #endif // QUICKDIRECTPATHER_H

@@ -22,12 +22,12 @@ tst_QuickPather::tst_QuickPather()
 
 void tst_QuickPather::gridPather()
 {
-    GameTimer timer;
+    QuickPather::GameTimer timer;
 
-    GridPather pather;
+    QuickPather::GridPather pather;
     pather.setTimer(&timer);
 
-    Entity entity;
+    QuickPather::Entity entity;
 
     // Move from {0, 0} to {1, 0}
     entity.setCentrePos(QPointF(16, 16));

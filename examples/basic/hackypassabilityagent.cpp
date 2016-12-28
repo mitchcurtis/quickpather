@@ -21,7 +21,7 @@ bool HackyPassabilityAgent::isPassable(const QPointF &pos, AbstractEntity *entit
 
     // very basic, hacky check that doesn't take into account a radius.
     QQuickItem *child = mGridItem->childAt(pos.x(), pos.y());
-    if (child->property("blocksMovement").toBool()) {
+    if (child && child->property("blocksMovement").toBool()) {
         return false;
     }
 

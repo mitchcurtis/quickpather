@@ -13,7 +13,7 @@
 namespace QuickPather {
 
 class AbstractEntity;
-class AbstractPassabilityAgent;
+class PassabilityAgent;
 class GameTimer;
 class SteeringAgent;
 
@@ -38,6 +38,8 @@ private:
 class QUICKPATHERSHARED_EXPORT GridPather : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QuickPather::GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
+    Q_PROPERTY(QuickPather::PassabilityAgent *passabilityAgent READ passabilityAgent WRITE setPassabilityAgent NOTIFY passabilityAgentChanged)
 
 public:
     explicit GridPather(QObject *parent = nullptr);
@@ -53,17 +55,19 @@ public:
 
     GridPathData pathData(AbstractEntity *entity) const;
 
+    PassabilityAgent *passabilityAgent();
+    void setPassabilityAgent(PassabilityAgent *passabilityAgent);
+
+signals:
+    void passabilityAgentChanged();
+    void timerChanged();
+
 protected:
     virtual void onCellSizeChanged(int oldCellSize, int newCellSize);
-    virtual void onTimerChanged(GameTimer *oldTimer, GameTimer *newTimer);
-    virtual void onPassabilityAgentChanged(AbstractPassabilityAgent *oldAgent, AbstractPassabilityAgent *newAgent);
 
     virtual void onNodeAddedToClosedList(const QPointF &centrePos);
     virtual void onNodeAddedToOpenList(const QPointF &centrePos);
     virtual void onNodeChosen(const QPointF &centrePos);
-
-    AbstractPassabilityAgent *passabilityAgent();
-    void setPassabilityAgent(AbstractPassabilityAgent *passabilityAgent);
 
 private slots:
     void timerUpdated(qreal delta);
@@ -72,7 +76,7 @@ private:
     int mCellSize;
     GameTimer *mTimer;
     SteeringAgent *mSteeringAgent;
-    AbstractPassabilityAgent *mPassabilityAgent;
+    PassabilityAgent *mPassabilityAgent;
     QHash<AbstractEntity*, GridPathData> mData;
 };
 

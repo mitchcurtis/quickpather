@@ -1,11 +1,11 @@
 #ifndef HACKYPASSABILITYAGENT_H
 #define HACKYPASSABILITYAGENT_H
 
-#include "quickpassabilityagent.h"
+#include "passabilityagent.h"
 
 class QQuickItem;
 
-class HackyPassabilityAgent : public QuickPather::QuickPassabilityAgent
+class HackyPassabilityAgent : public QuickPather::PassabilityAgent
 {
     Q_OBJECT
     Q_PROPERTY(QQuickItem *gridItem READ gridItem WRITE setGridItem NOTIFY gridItemChanged)
@@ -13,7 +13,7 @@ class HackyPassabilityAgent : public QuickPather::QuickPassabilityAgent
 public:
     HackyPassabilityAgent();
 
-    virtual bool isPassable(const QPointF &pos, QuickPather::AbstractEntity *entity);
+    virtual bool isPassable(const QPointF &pos, QuickPather::AbstractEntity *entity) override;
 
     QQuickItem *gridItem() const;
     void setGridItem(QQuickItem *gridItem);

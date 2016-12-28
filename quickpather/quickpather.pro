@@ -19,8 +19,7 @@ HEADERS += \
     abstractentity.h \
     quickgridpather.h \
     quickdirectpather.h \
-    abstractpassabilityagent.h \
-    quickpassabilityagent.h
+    passabilityagent.h
 
 SOURCES += \
     gametimer.cpp \
@@ -33,4 +32,4 @@ SOURCES += \
     entity.cpp \
     quickgridpather.cpp \
     quickdirectpather.cpp \
-    quickpassabilityagent.cpp
+    passabilityagent.cpp

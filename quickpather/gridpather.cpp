@@ -4,7 +4,7 @@
 #include <QLoggingCategory>
 #include <QQuickItem>
 
-#include "abstractpassabilityagent.h"
+#include "passabilityagent.h"
 #include "entity.h"
 #include "gametimer.h"
 #include "gridpathagent.h"
@@ -75,12 +75,12 @@ const QPointF straightDirections[qtyStraightDirections] = {
 bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
 {
     if (!mTimer) {
-        qWarning() << "No timer set";
+        qWarning() << "GridPather: No timer set";
         return false;
     }
 
     if (!mPassabilityAgent) {
-        qWarning() << "No passability agent set";
+        qWarning() << "GridPather: No passability agent set";
         return false;
     }
 
@@ -91,9 +91,11 @@ bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
     }
 
     // TODO: ensure target ends up precisely over node
-    if (fmod(startPos.x() - mCellSize / 2, mCellSize) != 0 || fmod(startPos.y() - mCellSize / 2, mCellSize) != 0) {
-        qDebug() << fmod(startPos.x(), mCellSize) << fmod(startPos.y(), mCellSize);
-        qWarning() << "Currently incapable of dealing with non-cell-centered positions";
+    const qreal xDiff = fmod(startPos.x() - mCellSize / 2, mCellSize);
+    const qreal yDiff = fmod(startPos.y() - mCellSize / 2, mCellSize);
+    if (xDiff != 0 || yDiff != 0) {
+        qWarning().nospace() << "GridPather: Currently incapable of dealing with non-cell-centered positions ("
+            << "the start position " << startPos << " does not result in the entity " << entity << " being centred in a cell)";
         // (Users of this API should simply wait until the target is centered before moving)
         return false;
     }
@@ -250,20 +252,19 @@ void GridPather::setTimer(GameTimer *timer)
     if (mTimer)
         mTimer->disconnect(this);
 
-    GameTimer *oldTimer = mTimer;
     mTimer = timer;
-    onTimerChanged(oldTimer, mTimer);
+    emit timerChanged();
 
     if (mTimer)
         connect(mTimer, &GameTimer::updated, this, &GridPather::timerUpdated);
 }
 
-AbstractPassabilityAgent *GridPather::passabilityAgent()
+PassabilityAgent *GridPather::passabilityAgent()
 {
     return mPassabilityAgent;
 }
 
-void GridPather::setPassabilityAgent(AbstractPassabilityAgent *passabilityAgent)
+void GridPather::setPassabilityAgent(PassabilityAgent *passabilityAgent)
 {
     if (!mData.isEmpty()) {
         qWarning() << "Cannot set passability agent while pathing active";
@@ -273,9 +274,8 @@ void GridPather::setPassabilityAgent(AbstractPassabilityAgent *passabilityAgent)
     if (passabilityAgent == mPassabilityAgent)
         return;
 
-    AbstractPassabilityAgent *oldAgent = mPassabilityAgent;
     mPassabilityAgent = passabilityAgent;
-    onPassabilityAgentChanged(oldAgent, mPassabilityAgent);
+    emit passabilityAgentChanged();
 }
 
 GridPathData GridPather::pathData(AbstractEntity *entity) const
@@ -303,14 +303,6 @@ void GridPather::onNodeChosen(const QPointF &)
 }
 
 void GridPather::onCellSizeChanged(int, int)
-{
-}
-
-void GridPather::onTimerChanged(GameTimer *, GameTimer *)
-{
-}
-
-void GridPather::onPassabilityAgentChanged(AbstractPassabilityAgent *, AbstractPassabilityAgent *)
 {
 }
 

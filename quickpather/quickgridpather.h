@@ -21,8 +21,8 @@ class QUICKPATHERSHARED_EXPORT QuickGridPather : public GridPather
 public:
     explicit QuickGridPather(QObject *parent = 0);
 
-    Q_INVOKABLE void moveTo(QuickEntity *entity, const QPointF &pos);
-    Q_INVOKABLE void cancel(QuickEntity *entity);
+    Q_INVOKABLE void moveTo(QuickPather::QuickEntity *entity, const QPointF &pos);
+    Q_INVOKABLE void cancel(QuickPather::QuickEntity *entity);
 
     QuickPassabilityAgent *quickPassabilityAgent();
     void setQuickPassabilityAgent(QuickPassabilityAgent *passabilityAgent);

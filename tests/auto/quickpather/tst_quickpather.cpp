@@ -1,6 +1,9 @@
 #include <QString>
 #include <QtTest>
 
+#include <QQmlEngine>
+#include <QQmlComponent>
+
 #include "entity.h"
 #include "gametimer.h"
 #include "gridpather.h"
@@ -26,6 +29,7 @@ public:
 
 private Q_SLOTS:
     void gridPather();
+    void customQmlPassabilityAgent();
 };
 
 tst_QuickPather::tst_QuickPather()
@@ -68,6 +72,41 @@ void tst_QuickPather::gridPather()
     pather.cancelEntityMovement(&entity);
 }
 
-QTEST_APPLESS_MAIN(tst_QuickPather)
+void tst_QuickPather::customQmlPassabilityAgent()
+{
+    QQmlEngine engine;
+
+    qmlRegisterType<QuickPather::GameTimer>("QuickPather", 1, 0, "GameTimer");
+    qmlRegisterType<QuickPather::GridPather>("QuickPather", 1, 0, "GridPather");
+    qmlRegisterType<QuickPather::QuickGridPather>("QuickPather", 1, 0, "QuickGridPather");
+    qmlRegisterType<QuickPather::PassabilityAgent>("QuickPather", 1, 0, "PassabilityAgent");
+    qRegisterMetaType<QuickPather::PassabilityAgent*>("PassabilityAgent");
+
+    qmlRegisterType<FreePassabilityAgent>("Test", 1, 0, "FreePassabilityAgent");
+
+    QQmlComponent component(&engine);
+    component.setData(
+        "import QtQuick 2.0 \n"
+        "import QuickPather 1.0 \n"
+        "import Test 1.0\n"
+        "Item {"
+            "GameTimer { \n"
+                "id: gameTimer \n"
+            "} \n"
+            "QuickGridPather { \n"
+                "id: gridPather \n"
+                "timer: gameTimer \n"
+                "passabilityAgent: freePassabilityAgent \n"
+            "} \n"
+            "FreePassabilityAgent { \n"
+                "id: freePassabilityAgent \n"
+            "} \n"
+        "} \n", QUrl());
+
+    QObject *root = component.create();
+    QVERIFY2(root, qPrintable(component.errorString()));
+}
+
+QTEST_MAIN(tst_QuickPather)
 
 #include "tst_quickpather.moc"

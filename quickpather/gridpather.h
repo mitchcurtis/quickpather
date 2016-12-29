@@ -8,13 +8,13 @@
 #include <QPointF>
 #include <QVector>
 
+#include "gametimer.h"
 #include "gridpathnode.h"
+#include "passabilityagent.h"
 
 namespace QuickPather {
 
 class AbstractEntity;
-class PassabilityAgent;
-class GameTimer;
 class SteeringAgent;
 
 class QUICKPATHERSHARED_EXPORT GridPathData
@@ -56,8 +56,8 @@ public:
 
     GridPathData pathData(AbstractEntity *entity) const;
 
-    PassabilityAgent *passabilityAgent();
-    void setPassabilityAgent(PassabilityAgent *passabilityAgent);
+    QuickPather::PassabilityAgent *passabilityAgent();
+    void setPassabilityAgent(QuickPather::PassabilityAgent *passabilityAgent);
 
 signals:
     void cellSizeChanged();

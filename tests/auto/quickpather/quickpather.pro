@@ -1,5 +1,4 @@
-QT += testlib
-QT -= gui
+QT += testlib qml quick
 
 TARGET = tst_quickpather
 CONFIG += console

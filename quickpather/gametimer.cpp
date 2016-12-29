@@ -27,6 +27,16 @@ void GameTimer::start(const QDateTime &gameStartDate)
     mElapsedTimer.restart();
 }
 
+void GameTimer::stop()
+{
+    mSimulatedTime = 0;
+    mRemainder = 0;
+    mDateTime = QDateTime();
+    mGameStartDate = QDateTime();
+    setRunning(false);
+    mTimer.disconnect(this);
+}
+
 void GameTimer::pause()
 {
     if (!mRunning) {

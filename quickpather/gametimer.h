@@ -19,6 +19,7 @@ public:
     GameTimer();
 
     Q_INVOKABLE void start(const QDateTime &gameStartDate = QDateTime());
+    Q_INVOKABLE void stop();
     Q_INVOKABLE void pause();
     Q_INVOKABLE void resume();
     Q_INVOKABLE void togglePaused();

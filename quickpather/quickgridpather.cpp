@@ -8,17 +8,6 @@ QuickGridPather::QuickGridPather(QObject *parent) :
     GridPather(parent)
 {
 }
-
-void QuickGridPather::moveTo(QuickEntity *entity, const QPointF &pos)
-{
-    moveEntityTo(entity, pos);
-}
-
-void QuickGridPather::cancel(QuickEntity *entity)
-{
-    cancelEntityMovement(entity);
-}
-
 #ifdef EXPOSE_VISUALISATION_API
 void QuickGridPather::onNodeAddedToClosedList(const QPointF &centrePos)
 {

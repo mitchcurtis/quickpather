@@ -45,8 +45,8 @@ class QUICKPATHERSHARED_EXPORT GridPather : public QObject
 public:
     explicit GridPather(QObject *parent = nullptr);
 
-    bool moveEntityTo(AbstractEntity *entity, const QPointF &pos);
-    void cancelEntityMovement(AbstractEntity *entity);
+    Q_INVOKABLE bool moveEntityTo(QuickPather::AbstractEntity *entity, const QPointF &pos);
+    Q_INVOKABLE void cancelEntityMovement(QuickPather::AbstractEntity *entity);
 
     int cellSize() const;
     void setCellSize(int cellSize);

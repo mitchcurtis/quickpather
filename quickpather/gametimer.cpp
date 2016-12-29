@@ -86,12 +86,18 @@ QDateTime GameTimer::dateFromSimulatedTime() const
     return mGameStartDate.addMSecs(mSimulatedTime * 1000 * mTimeSpeedMultiplier);
 }
 
+bool GameTimer::isRunning() const
+{
+    return mRunning;
+}
+
 void GameTimer::setRunning(bool running)
 {
     if (running == mRunning)
         return;
 
     mRunning = running;
+    emit runningChanged();
 }
 
 void GameTimer::doUpdate()

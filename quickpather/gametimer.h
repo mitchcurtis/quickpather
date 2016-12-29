@@ -13,6 +13,7 @@ namespace QuickPather {
 class QUICKPATHERSHARED_EXPORT GameTimer : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool running READ isRunning NOTIFY runningChanged)
 
 public:
     GameTimer();
@@ -22,12 +23,15 @@ public:
     Q_INVOKABLE void resume();
     Q_INVOKABLE void togglePaused();
 
+    bool isRunning() const;
+
     int fps() const;
     QDateTime dateTime() const;
     qreal timeSpeedMultiplier() const;
     void setTimeSpeedMultiplier(qreal timeSpeedMultiplier);
 
 signals:
+    void runningChanged();
     void updated(qreal delta);
 
 private slots:

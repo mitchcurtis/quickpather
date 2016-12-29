@@ -53,7 +53,7 @@ namespace Utils {
         return QPoint(::abs(point.x()), ::abs(point.y()));
     }
 
-    inline bool isNextToTargetPos(AbstractEntity *entity, const QPointF &targetPos, qreal targetLeniency = -1)
+    inline bool isNextToTargetPos(QuickEntity *entity, const QPointF &targetPos, qreal targetLeniency = -1)
     {
         if (targetLeniency == -1)
             targetLeniency = qMax(1.0, entity->speed() * 0.05);

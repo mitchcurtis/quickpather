@@ -2,7 +2,7 @@
 
 namespace QuickPather {
 
-bool PassabilityAgent::isPassable(const QPointF &, AbstractEntity *)
+bool PassabilityAgent::isPassable(const QPointF &, QuickEntity *)
 {
     return true;
 }

@@ -11,7 +11,7 @@ HackyPassabilityAgent::HackyPassabilityAgent() :
 {
 }
 
-bool HackyPassabilityAgent::isPassable(const QPointF &pos, QuickPather::AbstractEntity *entity)
+bool HackyPassabilityAgent::isPassable(const QPointF &pos, QuickPather::QuickEntity *entity)
 {
     if (!mGridItem)
         return false;

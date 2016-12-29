@@ -1,28 +1,49 @@
 #ifndef QUICKDIRECTPATHER_H
 #define QUICKDIRECTPATHER_H
 
-#include "directpather.h"
+#include "quickpather_global.h"
+
+#include <QHash>
+#include <QObject>
+#include <QPointF>
+#include <QVector>
 
 namespace QuickPather {
 
+class GameTimer;
+class SteeringAgent;
 class QuickEntity;
 
-class QUICKPATHERSHARED_EXPORT QuickDirectPather : public DirectPather
+class DirectPathData
+{
+public:
+    QPointF targetPos;
+};
+
+class QUICKPATHERSHARED_EXPORT QuickDirectPather : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QuickPather::GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
 
 public:
-    explicit QuickDirectPather(QObject *parent = 0);
+    explicit QuickDirectPather(QObject *parent = nullptr);
 
-    Q_INVOKABLE void moveTo(QuickEntity *entity, const QPointF &pos);
-    Q_INVOKABLE void cancel(QuickEntity *entity);
+    Q_INVOKABLE void moveEntityTo(QuickPather::QuickEntity *entity, const QPointF &pos);
+    Q_INVOKABLE void cancelEntityMovement(QuickPather::QuickEntity *entity);
 
-protected:
-    virtual void onTimerChanged(GameTimer *oldTimer, GameTimer *newTimer) override;
+    GameTimer *timer() const;
+    void setTimer(GameTimer *timer);
 
 signals:
     void timerChanged();
+
+private slots:
+    void timerUpdated(qreal delta);
+
+private:
+    GameTimer *mTimer;
+    SteeringAgent *mSteeringAgent;
+    QHash<QuickEntity*, DirectPathData> mData;
 };
 
 }

@@ -13,7 +13,7 @@ class HackyPassabilityAgent : public QuickPather::PassabilityAgent
 public:
     HackyPassabilityAgent();
 
-    virtual bool isPassable(const QPointF &pos, QuickPather::AbstractEntity *entity) override;
+    virtual bool isPassable(const QPointF &pos, QuickPather::QuickEntity *entity) override;
 
     QQuickItem *gridItem() const;
     void setGridItem(QQuickItem *gridItem);

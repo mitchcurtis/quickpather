@@ -3,14 +3,13 @@
 
 #include <QObject>
 
-#include "abstractentity.h"
 #include "quickpather_global.h"
 
 class QQuickItem;
 
 namespace QuickPather {
 
-class QUICKPATHERSHARED_EXPORT QuickEntity : public QObject, public AbstractEntity
+class QUICKPATHERSHARED_EXPORT QuickEntity : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QQuickItem *item READ item WRITE setItem NOTIFY itemChanged)
@@ -19,14 +18,14 @@ class QUICKPATHERSHARED_EXPORT QuickEntity : public QObject, public AbstractEnti
 public:
     explicit QuickEntity(QObject *parent = 0);
 
-    virtual QPointF centrePos() const override;
-    virtual void setCentrePos(const QPointF &centrePos) override;
+    virtual QPointF centrePos() const;
+    virtual void setCentrePos(const QPointF &centrePos);
 
-    virtual qreal speed() const override;
-    virtual void setSpeed(qreal speed) override;
+    virtual qreal speed() const;
+    virtual void setSpeed(qreal speed);
 
-    virtual qreal rotation() const override;
-    virtual void setRotation(qreal rotation) override;
+    virtual qreal rotation() const;
+    virtual void setRotation(qreal rotation);
 
     QQuickItem *item() const;
     void setItem(QQuickItem *item);

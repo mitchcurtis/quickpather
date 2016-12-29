@@ -24,6 +24,9 @@ QPointF QuickEntity::centrePos() const
 
 void QuickEntity::setCentrePos(const QPointF &centrePos)
 {
+    if (!mItem)
+        return;
+
     mItem->setPosition(Utils::topLeftFromCentrePosition(mItem, centrePos));
 }
 
@@ -43,11 +46,14 @@ void QuickEntity::setSpeed(qreal speed)
 
 qreal QuickEntity::rotation() const
 {
-    return mItem->rotation();
+    return mItem ? mItem->rotation() : 0;
 }
 
 void QuickEntity::setRotation(qreal rotation)
 {
+    if (!mItem)
+        return;
+
     mItem->setRotation(rotation);
 }
 

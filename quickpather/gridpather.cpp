@@ -5,9 +5,9 @@
 #include <QQuickItem>
 
 #include "passabilityagent.h"
-#include "entity.h"
 #include "gametimer.h"
 #include "gridpathagent.h"
+#include "quickentity.h"
 #include "steeringagent.h"
 #include "utils.h"
 
@@ -40,7 +40,7 @@ int GridPathData::currentNodeIndex() const
     return mCurrentNodeIndex;
 }
 
-GridPather::GridPather(QObject *parent) :
+QuickGridPather::QuickGridPather(QObject *parent) :
     QObject(parent),
     mCellSize(32),
     mTimer(nullptr),
@@ -72,7 +72,7 @@ const QPointF straightDirections[qtyStraightDirections] = {
 
    If a path to \a pos was found, any existing movement instructions are removed.
 */
-bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
+bool QuickGridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
 {
     if (!entity) {
         qWarning() << "GridPather: entity cannot be null";
@@ -219,17 +219,17 @@ bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
     return true;
 }
 
-void GridPather::cancelEntityMovement(AbstractEntity *entity)
+void QuickGridPather::cancelEntityMovement(QuickEntity *entity)
 {
     mData.remove(entity);
 }
 
-int GridPather::cellSize() const
+int QuickGridPather::cellSize() const
 {
     return mCellSize;
 }
 
-void GridPather::setCellSize(int cellSize)
+void QuickGridPather::setCellSize(int cellSize)
 {
     if (!mData.isEmpty()) {
         qWarning() << "Cannot set cell size while pathing active";
@@ -243,12 +243,12 @@ void GridPather::setCellSize(int cellSize)
     emit cellSizeChanged();
 }
 
-GameTimer *GridPather::timer() const
+GameTimer *QuickGridPather::timer() const
 {
     return mTimer;
 }
 
-void GridPather::setTimer(GameTimer *timer)
+void QuickGridPather::setTimer(GameTimer *timer)
 {
     if (timer == mTimer)
         return;
@@ -260,15 +260,15 @@ void GridPather::setTimer(GameTimer *timer)
     emit timerChanged();
 
     if (mTimer)
-        connect(mTimer, &GameTimer::updated, this, &GridPather::timerUpdated);
+        connect(mTimer, &GameTimer::updated, this, &QuickGridPather::timerUpdated);
 }
 
-PassabilityAgent *GridPather::passabilityAgent()
+PassabilityAgent *QuickGridPather::passabilityAgent()
 {
     return mPassabilityAgent;
 }
 
-void GridPather::setPassabilityAgent(PassabilityAgent *passabilityAgent)
+void QuickGridPather::setPassabilityAgent(PassabilityAgent *passabilityAgent)
 {
     if (!mData.isEmpty()) {
         qWarning() << "Cannot set passability agent while pathing active";
@@ -282,7 +282,7 @@ void GridPather::setPassabilityAgent(PassabilityAgent *passabilityAgent)
     emit passabilityAgentChanged();
 }
 
-GridPathData GridPather::pathData(AbstractEntity *entity) const
+GridPathData QuickGridPather::pathData(QuickEntity *entity) const
 {
     GridPathData data;
 
@@ -294,28 +294,33 @@ GridPathData GridPather::pathData(AbstractEntity *entity) const
     return data;
 }
 
-void GridPather::onNodeAddedToClosedList(const QPointF &)
+#ifdef EXPOSE_VISUALISATION_API
+void QuickGridPather::onNodeAddedToClosedList(const QPointF &centrePos)
+{
+    emit nodeAddedToClosedList(centrePos);
+}
+
+void QuickGridPather::onNodeAddedToOpenList(const QPointF &centrePos)
+{
+    emit nodeAddedToOpenList(centrePos);
+}
+
+void QuickGridPather::onNodeChosen(const QPointF &centrePos)
+{
+    emit nodeChosen(centrePos);
+}
+#endif
+
+void QuickGridPather::onCellSizeChanged(int, int)
 {
 }
 
-void GridPather::onNodeAddedToOpenList(const QPointF &)
+void QuickGridPather::timerUpdated(qreal delta)
 {
-}
-
-void GridPather::onNodeChosen(const QPointF &)
-{
-}
-
-void GridPather::onCellSizeChanged(int, int)
-{
-}
-
-void GridPather::timerUpdated(qreal delta)
-{
-    QHashIterator<AbstractEntity*, GridPathData> it(mData);
+    QHashIterator<QuickEntity*, GridPathData> it(mData);
     while (it.hasNext()) {
         it.next();
-        AbstractEntity *entity = it.key();
+        QuickEntity *entity = it.key();
 
         GridPathData &pathData = mData[entity];
         if (pathData.mCurrentNodeIndex < pathData.mNodes.size()) {

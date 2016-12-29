@@ -2,7 +2,7 @@
 
 #include <QQuickItem>
 
-#include "abstractentity.h"
+#include "quickentity.h"
 #include "utils.h"
 
 namespace QuickPather {
@@ -14,7 +14,7 @@ SteeringAgent::SteeringAgent(QObject *parent) :
 
 static const qreal lenience = 0.005;
 
-bool SteeringAgent::steerTo(AbstractEntity *entity, const QPointF &pos, qreal delta)
+bool SteeringAgent::steerTo(QuickEntity *entity, const QPointF &pos, qreal delta)
 {
     // We want to get as close as possible...
     if (!Utils::isNextToTargetPos(entity, pos, lenience)) {

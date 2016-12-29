@@ -12,8 +12,6 @@
 #include "gridpathnode.h"
 #include "passabilityagent.h"
 
-namespace QuickPather {
-
 class AbstractEntity;
 class SteeringAgent;
 
@@ -39,8 +37,8 @@ class QUICKPATHERSHARED_EXPORT GridPather : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int cellSize READ cellSize WRITE setCellSize NOTIFY cellSizeChanged)
-    Q_PROPERTY(QuickPather::GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
-    Q_PROPERTY(QuickPather::PassabilityAgent *passabilityAgent READ passabilityAgent WRITE setPassabilityAgent NOTIFY passabilityAgentChanged)
+    Q_PROPERTY(GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
+    Q_PROPERTY(PassabilityAgent *passabilityAgent READ passabilityAgent WRITE setPassabilityAgent NOTIFY passabilityAgentChanged)
 
 public:
     explicit GridPather(QObject *parent = nullptr);
@@ -56,8 +54,8 @@ public:
 
     GridPathData pathData(AbstractEntity *entity) const;
 
-    QuickPather::PassabilityAgent *passabilityAgent();
-    void setPassabilityAgent(QuickPather::PassabilityAgent *passabilityAgent);
+    PassabilityAgent *passabilityAgent();
+    void setPassabilityAgent(PassabilityAgent *passabilityAgent);
 
 signals:
     void cellSizeChanged();
@@ -81,7 +79,5 @@ private:
     PassabilityAgent *mPassabilityAgent;
     QHash<AbstractEntity*, GridPathData> mData;
 };
-
-}
 
 #endif // GRIDPATHER_H

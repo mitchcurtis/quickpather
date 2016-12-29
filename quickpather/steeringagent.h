@@ -5,8 +5,6 @@
 
 class QPointF;
 
-namespace QuickPather {
-
 class AbstractEntity;
 
 class SteeringAgent : public QObject
@@ -18,7 +16,5 @@ public:
 
     bool steerTo(AbstractEntity *entity, const QPointF &pos, qreal delta);
 };
-
-}
 
 #endif // STEERINGAGENT_H

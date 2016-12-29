@@ -1,7 +1,5 @@
 #include "entity.h"
 
-namespace QuickPather {
-
 Entity::Entity(QObject *parent) :
     QObject(parent),
     mSpeed(10),
@@ -49,6 +47,4 @@ void Entity::setRotation(qreal rotation)
 
     mRotation = rotation;
     emit rotationChanged();
-}
-
 }

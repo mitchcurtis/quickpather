@@ -6,8 +6,6 @@
 
 #include "quickpather_global.h"
 
-namespace QuickPather {
-
 class AbstractEntity;
 
 // Not pure abstract, because we want it to be usable in the Q_PROPERTY macro
@@ -17,7 +15,5 @@ class QUICKPATHERSHARED_EXPORT PassabilityAgent : public QObject
 public:
     virtual bool isPassable(const QPointF &pos, AbstractEntity *entity);
 };
-
-}
 
 #endif // PASSABILITYAGENT_H

@@ -8,8 +8,6 @@
 #include <QPointF>
 #include <QVector>
 
-namespace QuickPather {
-
 class AbstractEntity;
 class GameTimer;
 class SteeringAgent;
@@ -44,7 +42,5 @@ private:
     SteeringAgent *mSteeringAgent;
     QHash<AbstractEntity*, DirectPathData> mData;
 };
-
-}
 
 #endif // DIRECTPATHER_H

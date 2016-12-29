@@ -8,8 +8,6 @@ class QVector;
 template <typename T>
 class QSharedPointer;
 
-namespace QuickPather {
-
 class AbstractEntity;
 class GridPathNode;
 
@@ -32,7 +30,5 @@ private:
     bool mExcludeFirstNode;
     QPointF mTargetPos;
 };
-
-}
 
 #endif // GRIDPATHAGENT_H

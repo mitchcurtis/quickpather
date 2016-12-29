@@ -11,12 +11,12 @@ HackyPassabilityAgent::HackyPassabilityAgent() :
 {
 }
 
-bool HackyPassabilityAgent::isPassable(const QPointF &pos, QuickPather::AbstractEntity *entity)
+bool HackyPassabilityAgent::isPassable(const QPointF &pos, AbstractEntity *entity)
 {
     if (!mGridItem)
         return false;
 
-    QuickPather::QuickEntity *quickEntity = dynamic_cast<QuickPather::QuickEntity*>(entity);
+    QuickEntity *quickEntity = dynamic_cast<QuickEntity*>(entity);
     Q_ASSERT(quickEntity);
 
     // very basic, hacky check that doesn't take into account a radius.

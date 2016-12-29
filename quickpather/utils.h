@@ -8,7 +8,6 @@
 
 #include "quickentity.h"
 
-namespace QuickPather {
 namespace Utils {
     inline bool fuzzyCompare(const QPointF &lhs, const QPointF &rhs, qreal fuzz = 0.0001) {
         return qAbs(lhs.x() - rhs.x()) <= fuzz && qAbs(lhs.y() - rhs.y()) <= fuzz;
@@ -66,7 +65,6 @@ namespace Utils {
             targetLeniency = qMax(1.0, entitySpeed * 0.05);
         return Utils::fuzzyCompare(entityCentrePos, targetPos, targetLeniency);
     }
-}
 }
 
 #endif // UTILS_H

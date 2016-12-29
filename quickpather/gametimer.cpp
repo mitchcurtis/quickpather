@@ -2,8 +2,6 @@
 
 #include <QDebug>
 
-namespace QuickPather {
-
 GameTimer::GameTimer() :
     mRunning(false),
     mFps(100),
@@ -110,6 +108,4 @@ void GameTimer::doUpdate()
         mRemainder -= delta;
         mSimulatedTime += delta;
     }
-}
-
 }

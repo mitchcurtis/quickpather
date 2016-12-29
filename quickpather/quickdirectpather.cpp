@@ -2,8 +2,6 @@
 
 #include "quickentity.h"
 
-namespace QuickPather {
-
 QuickDirectPather::QuickDirectPather(QObject *parent) :
     DirectPather(parent)
 {
@@ -22,6 +20,4 @@ void QuickDirectPather::cancel(QuickEntity *entity)
 void QuickDirectPather::onTimerChanged(GameTimer *, GameTimer *)
 {
     emit timerChanged();
-}
-
 }

@@ -7,8 +7,6 @@
 
 #include "quickpather_global.h"
 
-namespace QuickPather {
-
 class QUICKPATHERSHARED_EXPORT GridPathNode
 {
 public:
@@ -54,7 +52,5 @@ private:
 };
 
 bool totalScoreLessThan(QSharedPointer<GridPathNode> lhs, QSharedPointer<GridPathNode> rhs);
-
-}
 
 #endif // GRIDPATHNODE_H

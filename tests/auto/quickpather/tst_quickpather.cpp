@@ -10,12 +10,12 @@
 #include "quickgridpather.h"
 #include "passabilityagent.h"
 
-class FreePassabilityAgent : public QuickPather::PassabilityAgent
+class FreePassabilityAgent : public PassabilityAgent
 {
 public:
     FreePassabilityAgent() {}
 
-    virtual bool isPassable(const QPointF &, QuickPather::AbstractEntity *) override {
+    virtual bool isPassable(const QPointF &, AbstractEntity *) override {
         return true;
     }
 };
@@ -38,8 +38,8 @@ tst_QuickPather::tst_QuickPather()
 
 void tst_QuickPather::gridPather()
 {
-    QuickPather::GridPather pather;
-    QuickPather::Entity entity;
+    GridPather pather;
+    Entity entity;
 
     // Try to move without setting a passability agent.
     QTest::ignoreMessage(QtWarningMsg, "GridPather: No timer set");
@@ -47,7 +47,7 @@ void tst_QuickPather::gridPather()
     QPointF pos(48, 16);
     QVERIFY(!pather.moveEntityTo(&entity, pos));
 
-    QuickPather::GameTimer timer;
+    GameTimer timer;
     pather.setTimer(&timer);
 
     // Try to move without setting a passability agent.
@@ -76,11 +76,11 @@ void tst_QuickPather::customQmlPassabilityAgent()
 {
     QQmlEngine engine;
 
-    qmlRegisterType<QuickPather::GameTimer>("QuickPather", 1, 0, "GameTimer");
-    qmlRegisterType<QuickPather::GridPather>("QuickPather", 1, 0, "GridPather");
-    qmlRegisterType<QuickPather::QuickGridPather>("QuickPather", 1, 0, "QuickGridPather");
-    qmlRegisterType<QuickPather::PassabilityAgent>("QuickPather", 1, 0, "PassabilityAgent");
-    qRegisterMetaType<QuickPather::PassabilityAgent*>("PassabilityAgent");
+    qmlRegisterType<GameTimer>("QuickPather", 1, 0, "GameTimer");
+    qmlRegisterType<GridPather>("QuickPather", 1, 0, "GridPather");
+    qmlRegisterType<QuickGridPather>("QuickPather", 1, 0, "QuickGridPather");
+    qmlRegisterType<PassabilityAgent>("QuickPather", 1, 0, "PassabilityAgent");
+//    qRegisterMetaType<PassabilityAgent*>("PassabilityAgent");
 
     qmlRegisterType<FreePassabilityAgent>("Test", 1, 0, "FreePassabilityAgent");
 

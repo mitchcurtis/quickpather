@@ -5,8 +5,6 @@
 
 #include "quickpather_global.h"
 
-namespace QuickPather {
-
 class QUICKPATHERSHARED_EXPORT AbstractEntity
 {
 public:
@@ -19,7 +17,5 @@ public:
     virtual qreal rotation() const = 0;
     virtual void setRotation(qreal rotation) = 0;
 };
-
-}
 
 #endif // ABSTRACTENTITY_H

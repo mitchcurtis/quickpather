@@ -6,8 +6,6 @@
 
 #include "abstractentity.h"
 
-namespace QuickPather {
-
 class QUICKPATHERSHARED_EXPORT Entity : public QObject, public AbstractEntity
 {
     Q_OBJECT
@@ -39,7 +37,5 @@ private:
     qreal mSpeed;
     qreal mRotation;
 };
-
-}
 
 #endif // ENTITY_H

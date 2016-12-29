@@ -30,14 +30,14 @@ public:
     QVector<QSharedPointer<GridPathNode> > nodes() const;
     int currentNodeIndex() const;
 private:
-    friend class QuickGridPather;
+    friend class GridPather;
 
     QPointF mTargetPos;
     QVector<QSharedPointer<GridPathNode> > mNodes;
     int mCurrentNodeIndex;
 };
 
-class QUICKPATHERSHARED_EXPORT QuickGridPather : public QObject
+class QUICKPATHERSHARED_EXPORT GridPather : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int cellSize READ cellSize WRITE setCellSize NOTIFY cellSizeChanged)
@@ -45,7 +45,7 @@ class QUICKPATHERSHARED_EXPORT QuickGridPather : public QObject
     Q_PROPERTY(QuickPather::PassabilityAgent *passabilityAgent READ passabilityAgent WRITE setPassabilityAgent NOTIFY passabilityAgentChanged)
 
 public:
-    explicit QuickGridPather(QObject *parent = nullptr);
+    explicit GridPather(QObject *parent = nullptr);
 
     Q_INVOKABLE bool moveEntityTo(QuickPather::QuickEntity *entity, const QPointF &pos);
     Q_INVOKABLE void cancelEntityMovement(QuickPather::QuickEntity *entity);

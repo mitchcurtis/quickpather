@@ -11,14 +11,14 @@
 
 namespace QuickPather {
 
-QuickDirectPather::QuickDirectPather(QObject *parent) :
+DirectPather::DirectPather(QObject *parent) :
     QObject(parent),
     mTimer(nullptr),
     mSteeringAgent(new SteeringAgent(this))
 {
 }
 
-void QuickDirectPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
+void DirectPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
 {
     if (!mTimer) {
         qWarning() << "No timer set";
@@ -35,17 +35,17 @@ void QuickDirectPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
     mData.insert(entity, pathData);
 }
 
-void QuickDirectPather::cancelEntityMovement(QuickEntity *entity)
+void DirectPather::cancelEntityMovement(QuickEntity *entity)
 {
     mData.remove(entity);
 }
 
-GameTimer *QuickDirectPather::timer() const
+GameTimer *DirectPather::timer() const
 {
     return mTimer;
 }
 
-void QuickDirectPather::setTimer(GameTimer *timer)
+void DirectPather::setTimer(GameTimer *timer)
 {
     if (timer == mTimer)
         return;
@@ -56,12 +56,12 @@ void QuickDirectPather::setTimer(GameTimer *timer)
     mTimer = timer;
 
     if (mTimer)
-        connect(mTimer, &GameTimer::updated, this, &QuickDirectPather::timerUpdated);
+        connect(mTimer, &GameTimer::updated, this, &DirectPather::timerUpdated);
 
     emit timerChanged();
 }
 
-void QuickDirectPather::timerUpdated(qreal delta)
+void DirectPather::timerUpdated(qreal delta)
 {
     QHashIterator<QuickEntity*, DirectPathData> it(mData);
     while (it.hasNext()) {

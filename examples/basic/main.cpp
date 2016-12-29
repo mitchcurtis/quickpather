@@ -2,9 +2,9 @@
 #include <QQmlApplicationEngine>
 
 #include "gametimer.h"
+#include "gridpather.h"
 #include "quickdirectpather.h"
 #include "quickentity.h"
-#include "quickgridpather.h"
 
 #include "hackypassabilityagent.h"
 
@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
     using namespace QuickPather;
 
     qmlRegisterType<GameTimer>("QuickPather", 1, 0, "GameTimer");
-    qmlRegisterType<QuickDirectPather>("QuickPather", 1, 0, "QuickDirectPather");
-    qmlRegisterType<QuickGridPather>("QuickPather", 1, 0, "QuickGridPather");
+    qmlRegisterType<DirectPather>("QuickPather", 1, 0, "DirectPather");
+    qmlRegisterType<GridPather>("QuickPather", 1, 0, "GridPather");
     qmlRegisterType<QuickEntity>("QuickPather", 1, 0, "QuickEntity");
 
     qmlRegisterType<HackyPassabilityAgent>("Example", 1, 0, "HackyPassabilityAgent");

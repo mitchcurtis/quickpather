@@ -39,7 +39,7 @@ tst_QuickPather::tst_QuickPather()
 
 void tst_QuickPather::gridPather()
 {
-    QuickPather::QuickGridPather pather;
+    QuickPather::GridPather pather;
     // Try to move a null entity.
     QTest::ignoreMessage(QtWarningMsg, "GridPather: entity cannot be null");
     QVERIFY(!pather.moveEntityTo(nullptr, QPointF()));
@@ -84,8 +84,8 @@ void tst_QuickPather::customQmlPassabilityAgent()
     QQmlEngine engine;
 
     qmlRegisterType<QuickPather::GameTimer>("QuickPather", 1, 0, "GameTimer");
-    qmlRegisterType<QuickPather::QuickGridPather>("QuickPather", 1, 0, "GridPather");
-    qmlRegisterType<QuickPather::QuickGridPather>("QuickPather", 1, 0, "QuickGridPather");
+    qmlRegisterType<QuickPather::GridPather>("QuickPather", 1, 0, "GridPather");
+    qmlRegisterType<QuickPather::GridPather>("QuickPather", 1, 0, "QuickGridPather");
     qmlRegisterType<QuickPather::PassabilityAgent>("QuickPather", 1, 0, "PassabilityAgent");
     qRegisterMetaType<QuickPather::PassabilityAgent*>("PassabilityAgent");
 

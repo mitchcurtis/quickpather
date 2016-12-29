@@ -1,5 +1,5 @@
-#ifndef QUICKDIRECTPATHER_H
-#define QUICKDIRECTPATHER_H
+#ifndef DIRECTPATHER_H
+#define DIRECTPATHER_H
 
 #include "quickpather_global.h"
 
@@ -20,13 +20,13 @@ public:
     QPointF targetPos;
 };
 
-class QUICKPATHERSHARED_EXPORT QuickDirectPather : public QObject
+class QUICKPATHERSHARED_EXPORT DirectPather : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QuickPather::GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
 
 public:
-    explicit QuickDirectPather(QObject *parent = nullptr);
+    explicit DirectPather(QObject *parent = nullptr);
 
     Q_INVOKABLE void moveEntityTo(QuickPather::QuickEntity *entity, const QPointF &pos);
     Q_INVOKABLE void cancelEntityMovement(QuickPather::QuickEntity *entity);
@@ -48,4 +48,4 @@ private:
 
 }
 
-#endif // QUICKDIRECTPATHER_H
+#endif // DIRECTPATHER_H

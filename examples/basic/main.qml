@@ -30,7 +30,7 @@ ApplicationWindow {
         id: gameTimer
     }
 
-    QuickDirectPather {
+    DirectPather {
         id: directPather
         timer: gameTimer
     }
@@ -40,7 +40,7 @@ ApplicationWindow {
         gridItem: grid
     }
 
-    QuickGridPather {
+    GridPather {
         id: gridPather
         timer: gameTimer
         passabilityAgent: hackyPassabilityAgent
@@ -120,7 +120,7 @@ ApplicationWindow {
 
             if (mouse.button === Qt.LeftButton) {
                 moveMarkerTo(targetX, targetY);
-                currentPather.moveTo(targetEntity, Qt.point(targetX, targetY))
+                currentPather.moveEntityTo(targetEntity, Qt.point(targetX, targetY))
             } else {
                 var item = grid.childAt(targetX, targetY);
                 if (item) {

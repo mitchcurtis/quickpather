@@ -91,8 +91,8 @@ bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
     }
 
     // TODO: ensure target ends up precisely over node
-    const qreal xDiff = fmod(startPos.x() - mCellSize / 2, mCellSize);
-    const qreal yDiff = fmod(startPos.y() - mCellSize / 2, mCellSize);
+    const int xDiff = qRound(startPos.x() - mCellSize / 2) % mCellSize;
+    const int yDiff = qRound(startPos.y() - mCellSize / 2) % mCellSize;
     if (xDiff != 0 || yDiff != 0) {
         qWarning().nospace() << "GridPather: Currently incapable of dealing with non-cell-centered positions ("
             << "the start position " << startPos << " does not result in the entity " << entity << " being centred in a cell)";

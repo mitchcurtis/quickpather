@@ -12,10 +12,10 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<GameTimer>("QuickPath", 1, 0, "GameTimer");
-    qmlRegisterType<QuickDirectPather>("QuickPath", 1, 0, "QuickDirectPather");
-    qmlRegisterType<QuickGridPather>("QuickPath", 1, 0, "QuickGridPather");
-    qmlRegisterType<QuickEntity>("QuickPath", 1, 0, "QuickEntity");
+    qmlRegisterType<GameTimer>("QuickPather", 1, 0, "GameTimer");
+    qmlRegisterType<QuickDirectPather>("QuickPather", 1, 0, "QuickDirectPather");
+    qmlRegisterType<QuickGridPather>("QuickPather", 1, 0, "QuickGridPather");
+    qmlRegisterType<QuickEntity>("QuickPather", 1, 0, "QuickEntity");
 
     qmlRegisterType<HackyPassabilityAgent>("Example", 1, 0, "HackyPassabilityAgent");
 

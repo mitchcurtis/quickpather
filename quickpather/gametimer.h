@@ -8,6 +8,8 @@
 
 #include "quickpather_global.h"
 
+namespace QuickPather {
+
 class QUICKPATHERSHARED_EXPORT GameTimer : public QObject
 {
     Q_OBJECT
@@ -47,5 +49,7 @@ private:
     QDateTime mDateTime;
     QDateTime mGameStartDate;
 };
+
+}
 
 #endif // GAMETIMER_H

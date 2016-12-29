@@ -13,6 +13,8 @@
 
 Q_LOGGING_CATEGORY(lcGridPather, "quickpather.gridpather")
 
+namespace QuickPather {
+
 GridPathData::GridPathData() :
     mCurrentNodeIndex(-1)
 {
@@ -321,4 +323,6 @@ void GridPather::timerUpdated(qreal delta)
             mData.remove(entity);
         }
     }
+}
+
 }

@@ -5,6 +5,8 @@
 #include "abstractentity.h"
 #include "utils.h"
 
+namespace QuickPather {
+
 SteeringAgent::SteeringAgent(QObject *parent) :
     QObject(parent)
 {
@@ -33,4 +35,6 @@ bool SteeringAgent::steerTo(AbstractEntity *entity, const QPointF &pos, qreal de
     }
 
     return true;
+}
+
 }

@@ -2,6 +2,8 @@
 
 #include "quickentity.h"
 
+namespace QuickPather {
+
 QuickGridPather::QuickGridPather(QObject *parent) :
     GridPather(parent)
 {
@@ -33,3 +35,5 @@ void QuickGridPather::onNodeChosen(const QPointF &centrePos)
     emit nodeChosen(centrePos);
 }
 #endif
+
+}

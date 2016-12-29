@@ -12,6 +12,8 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+    using namespace QuickPather;
+
     qmlRegisterType<GameTimer>("QuickPather", 1, 0, "GameTimer");
     qmlRegisterType<QuickDirectPather>("QuickPather", 1, 0, "QuickDirectPather");
     qmlRegisterType<QuickGridPather>("QuickPather", 1, 0, "QuickGridPather");

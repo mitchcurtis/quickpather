@@ -1,5 +1,7 @@
 #include "gridpathnode.h"
 
+namespace QuickPather {
+
 GridPathNode::GridPathNode()
     : mStartCost(0)
     , mTargetCost(0)
@@ -63,3 +65,4 @@ bool totalScoreLessThan(QSharedPointer<GridPathNode> lhs, QSharedPointer<GridPat
     return lhs->totalCost() < rhs->totalCost();
 }
 
+}

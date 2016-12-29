@@ -4,6 +4,8 @@
 
 #include "utils.h"
 
+namespace QuickPather {
+
 QuickEntity::QuickEntity(QObject *parent) :
     QObject(parent),
     mItem(nullptr),
@@ -72,4 +74,6 @@ void QuickEntity::setItem(QQuickItem *item)
     }
 
     emit itemChanged();
+}
+
 }

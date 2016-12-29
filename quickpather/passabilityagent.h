@@ -12,6 +12,7 @@ class AbstractEntity;
 // and not force derived classes to multiply derive from it and QObject.
 class QUICKPATHERSHARED_EXPORT PassabilityAgent : public QObject
 {
+    Q_OBJECT
 public:
     virtual bool isPassable(const QPointF &pos, AbstractEntity *entity);
 };

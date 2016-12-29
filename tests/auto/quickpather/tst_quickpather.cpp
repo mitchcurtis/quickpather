@@ -39,6 +39,10 @@ tst_QuickPather::tst_QuickPather()
 void tst_QuickPather::gridPather()
 {
     QuickPather::GridPather pather;
+    // Try to move a null entity.
+    QTest::ignoreMessage(QtWarningMsg, "GridPather: entity cannot be null");
+    QVERIFY(!pather.moveEntityTo(nullptr, QPointF()));
+
     QuickPather::Entity entity;
 
     // Try to move without setting a passability agent.

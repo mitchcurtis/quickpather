@@ -74,6 +74,11 @@ const QPointF straightDirections[qtyStraightDirections] = {
 */
 bool GridPather::moveEntityTo(AbstractEntity *entity, const QPointF &pos)
 {
+    if (!entity) {
+        qWarning() << "GridPather: entity cannot be null";
+        return false;
+    }
+
     if (!mTimer) {
         qWarning() << "GridPather: No timer set";
         return false;

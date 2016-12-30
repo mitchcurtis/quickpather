@@ -12,7 +12,7 @@ Box2DKineticSteeringAgent::Box2DKineticSteeringAgent()
 
 }
 
-static const qreal lenience = 0.005;
+static const qreal lenience = 0.5;
 
 bool QuickPather::Box2DKineticSteeringAgent::steerTo(QuickPather::QuickEntity *entity, const QPointF &pos, qreal delta)
 {
@@ -33,10 +33,13 @@ bool QuickPather::Box2DKineticSteeringAgent::steerTo(QuickPather::QuickEntity *e
         // with the "entity->speed() * delta" calculation, because we choose the
         // remaining distance instead in that case.
         qreal moveDistance = entity->speed() * delta;
-        const QLineF lineToTarget(entity->centrePos(), pos);
-        if (lineToTarget.length() < moveDistance) {
-             moveDistance = lineToTarget.length();
-        }
+        // TODO: this is fine for the default SteeringAgent which sets the item's position instantly,
+        // but for Box2D, reducing the velocity makes the target visibly slow down as it gets to each node.
+        // To account for this loss of accuracy, we bump the lenience up.
+//        const QLineF lineToTarget(entity->centrePos(), pos);
+//        if (lineToTarget.length() < moveDistance) {
+//             moveDistance = lineToTarget.length();
+//        }
 
         QPointF velocity = QTransform().rotate(angleToTarget).map(QPointF(0, moveDistance));
         body->setProperty("linearVelocity", -velocity);
@@ -49,6 +52,9 @@ bool QuickPather::Box2DKineticSteeringAgent::steerTo(QuickPather::QuickEntity *e
     }
 
     body->setProperty("linearVelocity", QPointF(0, 0));
+    // Forcing our position to the desired position eliminates the effect
+    // where the target is constantly rotating and moving trying to get to the desired position.
+    entity->setCentrePos(pos);
     return true;
 }
 

@@ -10,6 +10,7 @@
 #include "gridpather.h"
 #include "quickentity.h"
 #include "passabilityagent.h"
+#include "steeringagent.h"
 
 class FreePassabilityAgent : public QuickPather::PassabilityAgent
 {
@@ -49,7 +50,7 @@ void tst_QuickPather::gridPather()
     entity.setItem(item.data());
 
     // Try to move without setting a passability agent.
-    QTest::ignoreMessage(QtWarningMsg, "GridPather: No timer set");
+    QTest::ignoreMessage(QtWarningMsg, "GridPather: no timer set");
     entity.setCentrePos(QPointF(16, 16));
     QPointF pos(48, 16);
     QVERIFY(!pather.moveEntityTo(&entity, pos));
@@ -58,11 +59,18 @@ void tst_QuickPather::gridPather()
     pather.setTimer(&timer);
 
     // Try to move without setting a passability agent.
-    QTest::ignoreMessage(QtWarningMsg, "GridPather: No passability agent set");
+    QTest::ignoreMessage(QtWarningMsg, "GridPather: no passability agent set");
     QVERIFY(!pather.moveEntityTo(&entity, pos));
 
     FreePassabilityAgent passabilityAgent;
     pather.setPassabilityAgent(&passabilityAgent);
+
+    // Try to move without setting a steering agent.
+    QTest::ignoreMessage(QtWarningMsg, "GridPather: no steering agent set");
+    QVERIFY(!pather.moveEntityTo(&entity, pos));
+
+    QuickPather::SteeringAgent steeringAgent;
+    pather.setSteeringAgent(&steeringAgent);
 
     // Move from {0, 0} to {1, 0}
     QVERIFY(pather.moveEntityTo(&entity, pos));
@@ -72,7 +80,7 @@ void tst_QuickPather::gridPather()
 
     // Move from non-factor-of-cell-size position to {1, 0}
     entity.setCentrePos(QPointF(0, 0));
-    QTest::ignoreMessage(QtWarningMsg, QRegularExpression("GridPather: Currently incapable of dealing with non-cell-centered positions.*"));
+    QTest::ignoreMessage(QtWarningMsg, QRegularExpression("GridPather: currently incapable of dealing with non-cell-centered positions.*"));
     QVERIFY(!pather.moveEntityTo(&entity, pos));
     QCOMPARE(pather.pathData(&entity).nodes().size(), 0);
     // TODO: test steering as well
@@ -83,6 +91,7 @@ void tst_QuickPather::customQmlPassabilityAgent()
 {
     QQmlEngine engine;
 
+    // Check that our QML types can be assigned to our properties.
     qmlRegisterType<QuickPather::GameTimer>("QuickPather", 1, 0, "GameTimer");
     qmlRegisterType<QuickPather::GridPather>("QuickPather", 1, 0, "GridPather");
     qmlRegisterType<QuickPather::GridPather>("QuickPather", 1, 0, "QuickGridPather");

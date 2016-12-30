@@ -12,12 +12,11 @@
 #include "gridpathnode.h"
 #include "passabilityagent.h"
 #include "quickentity.h"
+#include "steeringagent.h"
 
 #define EXPOSE_VISUALISATION_API
 
 namespace QuickPather {
-
-class SteeringAgent;
 
 class QUICKPATHERSHARED_EXPORT GridPathData
 {
@@ -43,6 +42,7 @@ class QUICKPATHERSHARED_EXPORT GridPather : public QObject
     Q_PROPERTY(int cellSize READ cellSize WRITE setCellSize NOTIFY cellSizeChanged)
     Q_PROPERTY(QuickPather::GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
     Q_PROPERTY(QuickPather::PassabilityAgent *passabilityAgent READ passabilityAgent WRITE setPassabilityAgent NOTIFY passabilityAgentChanged)
+    Q_PROPERTY(QuickPather::SteeringAgent *steeringAgent READ steeringAgent WRITE setSteeringAgent NOTIFY steeringAgentChanged)
 
 public:
     explicit GridPather(QObject *parent = nullptr);
@@ -61,9 +61,13 @@ public:
     QuickPather::PassabilityAgent *passabilityAgent();
     void setPassabilityAgent(QuickPather::PassabilityAgent *passabilityAgent);
 
+    QuickPather::SteeringAgent *steeringAgent();
+    void setSteeringAgent(QuickPather::SteeringAgent *steeringAgent);
+
 signals:
     void cellSizeChanged();
     void passabilityAgentChanged();
+    void steeringAgentChanged();
     void timerChanged();
 
 #ifdef EXPOSE_VISUALISATION_API
@@ -87,8 +91,8 @@ private slots:
 private:
     int mCellSize;
     GameTimer *mTimer;
-    SteeringAgent *mSteeringAgent;
     PassabilityAgent *mPassabilityAgent;
+    SteeringAgent *mSteeringAgent;
     QHash<QuickEntity*, GridPathData> mData;
 };
 

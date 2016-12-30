@@ -15,7 +15,8 @@ HEADERS += \
     gridpathagent.h \
     steeringagent.h \
     passabilityagent.h \
-    quickdirectpather.h
+    box2dkineticsteeringagent.h \
+    directpather.h
 
 SOURCES += \
     gametimer.cpp \
@@ -25,4 +26,5 @@ SOURCES += \
     gridpathagent.cpp \
     steeringagent.cpp \
     passabilityagent.cpp \
-    quickdirectpather.cpp
+    box2dkineticsteeringagent.cpp \
+    directpather.cpp

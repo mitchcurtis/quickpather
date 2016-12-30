@@ -1,4 +1,4 @@
-#include "quickdirectpather.h"
+#include "directpather.h"
 
 #include <QDebug>
 #include <QTransform>
@@ -14,25 +14,26 @@ namespace QuickPather {
 DirectPather::DirectPather(QObject *parent) :
     QObject(parent),
     mTimer(nullptr),
-    mSteeringAgent(new SteeringAgent(this))
+    mSteeringAgent(nullptr)
 {
 }
 
-void DirectPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
+bool DirectPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
 {
     if (!mTimer) {
-        qWarning() << "No timer set";
-        return;
+        qWarning() << "DirectPather: no timer set";
+        return false;
     }
 
     if (!mSteeringAgent) {
-        qWarning() << "No steering agent set";
-        return;
+        qWarning() << "DirectPather: no steering agent set";
+        return false;
     }
 
     DirectPathData pathData;
     pathData.targetPos = pos;
     mData.insert(entity, pathData);
+    return true;
 }
 
 void DirectPather::cancelEntityMovement(QuickEntity *entity)
@@ -59,6 +60,25 @@ void DirectPather::setTimer(GameTimer *timer)
         connect(mTimer, &GameTimer::updated, this, &DirectPather::timerUpdated);
 
     emit timerChanged();
+}
+
+SteeringAgent *DirectPather::steeringAgent()
+{
+    return mSteeringAgent;
+}
+
+void DirectPather::setSteeringAgent(SteeringAgent *steeringAgent)
+{
+    if (!mData.isEmpty()) {
+        qWarning() << "DirectPather: cannot set steering agent while pathing active";
+        return;
+    }
+
+    if (steeringAgent == mSteeringAgent)
+        return;
+
+    mSteeringAgent = steeringAgent;
+    emit steeringAgentChanged();
 }
 
 void DirectPather::timerUpdated(qreal delta)

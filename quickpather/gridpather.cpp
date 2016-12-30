@@ -44,8 +44,8 @@ GridPather::GridPather(QObject *parent) :
     QObject(parent),
     mCellSize(32),
     mTimer(nullptr),
-    mSteeringAgent(new SteeringAgent(this)),
-    mPassabilityAgent(nullptr)
+    mPassabilityAgent(nullptr),
+    mSteeringAgent(nullptr)
 {
 }
 
@@ -80,12 +80,17 @@ bool GridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
     }
 
     if (!mTimer) {
-        qWarning() << "GridPather: No timer set";
+        qWarning() << "GridPather: no timer set";
         return false;
     }
 
     if (!mPassabilityAgent) {
-        qWarning() << "GridPather: No passability agent set";
+        qWarning() << "GridPather: no passability agent set";
+        return false;
+    }
+
+    if (!mSteeringAgent) {
+        qWarning() << "GridPather: no steering agent set";
         return false;
     }
 
@@ -99,7 +104,7 @@ bool GridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
     const int xDiff = qRound(startPos.x() - mCellSize / 2) % mCellSize;
     const int yDiff = qRound(startPos.y() - mCellSize / 2) % mCellSize;
     if (xDiff != 0 || yDiff != 0) {
-        qWarning().nospace() << "GridPather: Currently incapable of dealing with non-cell-centered positions ("
+        qWarning().nospace() << "GridPather: currently incapable of dealing with non-cell-centered positions ("
             << "the start position " << startPos << " does not result in the entity " << entity << " being centred in a cell)";
         // (Users of this API should simply wait until the target is centered before moving)
         return false;
@@ -280,6 +285,25 @@ void GridPather::setPassabilityAgent(PassabilityAgent *passabilityAgent)
 
     mPassabilityAgent = passabilityAgent;
     emit passabilityAgentChanged();
+}
+
+SteeringAgent *GridPather::steeringAgent()
+{
+    return mSteeringAgent;
+}
+
+void GridPather::setSteeringAgent(SteeringAgent *steeringAgent)
+{
+    if (!mData.isEmpty()) {
+        qWarning() << "Cannot set steering agent while pathing active";
+        return;
+    }
+
+    if (steeringAgent == mSteeringAgent)
+        return;
+
+    mSteeringAgent = steeringAgent;
+    emit steeringAgentChanged();
 }
 
 GridPathData GridPather::pathData(QuickEntity *entity) const

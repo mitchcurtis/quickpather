@@ -3,20 +3,22 @@
 
 #include <QObject>
 
+#include "quickpather_global.h"
+
 class QPointF;
 
 namespace QuickPather {
 
 class QuickEntity;
 
-class SteeringAgent : public QObject
+class QUICKPATHERSHARED_EXPORT SteeringAgent : public QObject
 {
     Q_OBJECT
 
 public:
     SteeringAgent(QObject *parent = nullptr);
 
-    bool steerTo(QuickPather::QuickEntity *entity, const QPointF &pos, qreal delta);
+    virtual bool steerTo(QuickPather::QuickEntity *entity, const QPointF &pos, qreal delta);
 };
 
 }

@@ -7,9 +7,9 @@
 
 namespace QuickPather {
 
-Box2DKineticSteeringAgent::Box2DKineticSteeringAgent()
+Box2DKineticSteeringAgent::Box2DKineticSteeringAgent() :
+    mPixelsPerMeter(1)
 {
-
 }
 
 static const qreal lenience = 0.5;
@@ -32,7 +32,8 @@ bool QuickPather::Box2DKineticSteeringAgent::steerTo(QuickPather::QuickEntity *e
         // ... without stopping too early. It's OK if we overshoot the target
         // with the "entity->speed() * delta" calculation, because we choose the
         // remaining distance instead in that case.
-        qreal moveDistance = entity->speed() * delta;
+        // TODO: figure out how use mPixelsPerMeter here...
+        qreal moveDistance = entity->speed() * delta/* * mPixelsPerMeter*/;
         // TODO: this is fine for the default SteeringAgent which sets the item's position instantly,
         // but for Box2D, reducing the velocity makes the target visibly slow down as it gets to each node.
         // To account for this loss of accuracy, we bump the lenience up.
@@ -56,6 +57,20 @@ bool QuickPather::Box2DKineticSteeringAgent::steerTo(QuickPather::QuickEntity *e
     // where the target is constantly rotating and moving trying to get to the desired position.
     entity->setCentrePos(pos);
     return true;
+}
+
+qreal Box2DKineticSteeringAgent::pixelsPerMeter() const
+{
+    return mPixelsPerMeter;
+}
+
+void Box2DKineticSteeringAgent::setPixelsPerMeter(qreal pixelsPerMeter)
+{
+    if (pixelsPerMeter == mPixelsPerMeter)
+        return;
+
+    mPixelsPerMeter = pixelsPerMeter;
+    emit pixelsPerMeterChanged();
 }
 
 }

@@ -20,3 +20,6 @@ win32 {
 
 SOURCES += tst_quickpather.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+RESOURCES += qml.qrc
+OTHER_FILES += data/*.qml

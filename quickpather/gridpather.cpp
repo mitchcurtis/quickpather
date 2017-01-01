@@ -220,6 +220,8 @@ bool GridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
     pathData.mCurrentNodeIndex = 0;
     mData.insert(entity, pathData);
 
+    QObject::connect(entity, &QuickEntity::entityDestroyed, this, &GridPather::cancelEntityMovement);
+
     qCDebug(lcGridPather) << "Successfully found path (" << shortestPath.size() << "nodes) for" << entity << "to target pos" << pos;
     return true;
 }
@@ -227,6 +229,7 @@ bool GridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
 void GridPather::cancelEntityMovement(QuickEntity *entity)
 {
     mData.remove(entity);
+    QObject::disconnect(entity, &QuickEntity::entityDestroyed, this, &GridPather::cancelEntityMovement);
 }
 
 int GridPather::cellSize() const

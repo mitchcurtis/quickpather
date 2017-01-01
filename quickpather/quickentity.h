@@ -17,6 +17,7 @@ class QUICKPATHERSHARED_EXPORT QuickEntity : public QObject
 
 public:
     explicit QuickEntity(QObject *parent = 0);
+    ~QuickEntity();
 
     virtual QPointF centrePos() const;
     virtual void setCentrePos(const QPointF &centrePos);
@@ -31,6 +32,7 @@ public:
     void setItem(QQuickItem *item);
 
 signals:
+    void entityDestroyed(QuickEntity *entity);
     void centrePosChanged();
     void speedChanged();
     void rotationChanged();

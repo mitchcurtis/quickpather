@@ -33,12 +33,16 @@ bool DirectPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
     DirectPathData pathData;
     pathData.targetPos = pos;
     mData.insert(entity, pathData);
+
+    QObject::connect(entity, &QuickEntity::entityDestroyed, this, &DirectPather::cancelEntityMovement);
+
     return true;
 }
 
 void DirectPather::cancelEntityMovement(QuickEntity *entity)
 {
     mData.remove(entity);
+    QObject::disconnect(entity, &QuickEntity::entityDestroyed, this, &DirectPather::cancelEntityMovement);
 }
 
 GameTimer *DirectPather::timer() const

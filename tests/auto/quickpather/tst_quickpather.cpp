@@ -5,6 +5,7 @@
 #include <QQmlComponent>
 #include <QQuickItem>
 
+#include "directpather.h"
 #include "gametimer.h"
 #include "gridpather.h"
 #include "gridpather.h"
@@ -32,10 +33,25 @@ public:
 private Q_SLOTS:
     void gridPather();
     void customQmlPassabilityAgent();
+    void entityDestroyed();
+
+private:
+    void registerQmlTypes();
 };
 
 tst_QuickPather::tst_QuickPather()
 {
+}
+
+void tst_QuickPather::registerQmlTypes()
+{
+    qmlRegisterType<QuickPather::GameTimer>("QuickPather", 1, 0, "GameTimer");
+    qmlRegisterType<QuickPather::GridPather>("QuickPather", 1, 0, "GridPather");
+    qmlRegisterType<QuickPather::DirectPather>("QuickPather", 1, 0, "DirectPather");
+    qmlRegisterType<QuickPather::PassabilityAgent>("QuickPather", 1, 0, "PassabilityAgent");
+    qRegisterMetaType<QuickPather::PassabilityAgent*>("PassabilityAgent");
+    qmlRegisterType<QuickPather::QuickEntity>("QuickPather", 1, 0, "QuickEntity");
+    qmlRegisterType<QuickPather::SteeringAgent>("QuickPather", 1, 0, "SteeringAgent");
 }
 
 void tst_QuickPather::gridPather()
@@ -92,11 +108,7 @@ void tst_QuickPather::customQmlPassabilityAgent()
     QQmlEngine engine;
 
     // Check that our QML types can be assigned to our properties.
-    qmlRegisterType<QuickPather::GameTimer>("QuickPather", 1, 0, "GameTimer");
-    qmlRegisterType<QuickPather::GridPather>("QuickPather", 1, 0, "GridPather");
-    qmlRegisterType<QuickPather::GridPather>("QuickPather", 1, 0, "QuickGridPather");
-    qmlRegisterType<QuickPather::PassabilityAgent>("QuickPather", 1, 0, "PassabilityAgent");
-    qRegisterMetaType<QuickPather::PassabilityAgent*>("PassabilityAgent");
+    registerQmlTypes();
 
     qmlRegisterType<FreePassabilityAgent>("Test", 1, 0, "FreePassabilityAgent");
 
@@ -109,7 +121,7 @@ void tst_QuickPather::customQmlPassabilityAgent()
             "GameTimer { \n"
                 "id: gameTimer \n"
             "} \n"
-            "QuickGridPather { \n"
+            "GridPather { \n"
                 "id: gridPather \n"
                 "timer: gameTimer \n"
                 "passabilityAgent: freePassabilityAgent \n"
@@ -121,6 +133,33 @@ void tst_QuickPather::customQmlPassabilityAgent()
 
     QObject *root = component.create();
     QVERIFY2(root, qPrintable(component.errorString()));
+}
+
+void tst_QuickPather::entityDestroyed()
+{
+    QQmlEngine engine;
+    registerQmlTypes();
+
+    QQmlComponent component(&engine, QUrl::fromLocalFile(":/data/entityDestruction.qml"));
+    QObject *root = component.create();
+    QVERIFY2(root, qPrintable(component.errorString()));
+
+    QuickPather::QuickEntity *entity = root->property("entity").value<QuickPather::QuickEntity*>();
+    QVERIFY(entity);
+
+    QuickPather::GridPather *gridPather = root->property("gridPather").value<QuickPather::GridPather*>();
+    QVERIFY(gridPather);
+    QVERIFY(gridPather->moveEntityTo(entity, QPointF(gridPather->cellSize() * 1.5, gridPather->cellSize() * 1.5)));
+    QVERIFY(gridPather->pathData(entity).isValid());
+
+    QQuickItem *entityItem = entity->property("item").value<QQuickItem*>();
+    QVERIFY(entityItem);
+
+    QSignalSpy entityDestroyedSpy(entity, SIGNAL(entityDestroyed(QuickEntity*)));
+    delete entityItem;
+    QCOMPARE(entityDestroyedSpy.count(), 1);
+
+    QVERIFY(!gridPather->pathData(entity).isValid());
 }
 
 QTEST_MAIN(tst_QuickPather)

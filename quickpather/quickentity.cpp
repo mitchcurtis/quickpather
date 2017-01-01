@@ -13,6 +13,11 @@ QuickEntity::QuickEntity(QObject *parent) :
 {
 }
 
+QuickEntity::~QuickEntity()
+{
+    emit entityDestroyed(this);
+}
+
 QPointF QuickEntity::centrePos() const
 {
     if (!mItem) {

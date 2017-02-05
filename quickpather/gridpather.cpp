@@ -132,6 +132,8 @@ bool GridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
     typedef NodeVector::iterator node_it;
     typedef NodeVector::const_iterator const_node_it;
 
+    int isPassableChecks = 0;
+
     do {
         // Look for the lowest "total cost" square on the open list. We refer to this as the selected node.
         node_it lowest = std::min_element(openList.begin(), openList.end(), totalScoreLessThan);
@@ -156,6 +158,7 @@ bool GridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
             bool walkable = mPassabilityAgent->isPassable(adjNode->pos(), entity/*, &boundsEnlargement*/);
             bool isOnClosedList = std::find_if(closedList.begin(), closedList.end(),
                 PathNodePosComp(adjNode)) != closedList.end();
+            ++isPassableChecks;
 
             if(walkable && !isOnClosedList) {
                 node_it onOpenList = std::find_if(openList.begin(), openList.end(), PathNodePosComp(adjNode));
@@ -224,7 +227,8 @@ bool GridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
 
     QObject::connect(entity, &QuickEntity::entityDestroyed, this, &GridPather::cancelEntityMovement);
 
-    qCDebug(lcGridPather) << "Successfully found path (" << shortestPath.size() << "nodes) for" << entity << "to target pos" << pos;
+    qCDebug(lcGridPather).nospace() << "Successfully found path (" << shortestPath.size() << " nodes) for "
+        << entity << " to target pos " << pos << " after " << isPassableChecks << " isPassable() checks";
     return true;
 }
 

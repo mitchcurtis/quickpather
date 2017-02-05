@@ -110,6 +110,8 @@ bool GridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
         return false;
     }
 
+    qCDebug(lcGridPather) << "Looking for path to target pos" << pos;
+
     QVector<QSharedPointer<GridPathNode> > openList;
     QVector<QSharedPointer<GridPathNode> > closedList;
     QVector<QSharedPointer<GridPathNode> > shortestPath;

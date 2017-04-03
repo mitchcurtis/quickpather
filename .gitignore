@@ -19,6 +19,7 @@ moc_*.obj
 *.user.*
 Makefile*
 *.moc
+*moc_predefs.h
 qrc_*.cpp
 .qmake.stash
 *.autosave
@@ -30,3 +31,6 @@ qrc_*.cpp
 
 quickpather/debug/
 tests/auto/quickpather/debug/
+tests/auto/quickpather/tst_quickpather
+examples/basic/basic
+examples/box2d/box2d

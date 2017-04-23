@@ -18,6 +18,8 @@
 
 namespace QuickPather {
 
+class PathCache;
+
 class QUICKPATHERSHARED_EXPORT GridPathData
 {
 public:
@@ -43,6 +45,7 @@ class QUICKPATHERSHARED_EXPORT GridPather : public QObject
     Q_PROPERTY(QuickPather::GameTimer *timer READ timer WRITE setTimer NOTIFY timerChanged)
     Q_PROPERTY(QuickPather::PassabilityAgent *passabilityAgent READ passabilityAgent WRITE setPassabilityAgent NOTIFY passabilityAgentChanged)
     Q_PROPERTY(QuickPather::SteeringAgent *steeringAgent READ steeringAgent WRITE setSteeringAgent NOTIFY steeringAgentChanged)
+    Q_PROPERTY(QuickPather::PathCache *pathCache READ pathCache WRITE setPathCache NOTIFY pathCacheChanged)
 
 public:
     explicit GridPather(QObject *parent = nullptr);
@@ -64,11 +67,15 @@ public:
     QuickPather::SteeringAgent *steeringAgent();
     void setSteeringAgent(QuickPather::SteeringAgent *steeringAgent);
 
+    PathCache *pathCache();
+    void setPathCache(PathCache *cache);
+
 signals:
+    void timerChanged();
     void cellSizeChanged();
     void passabilityAgentChanged();
     void steeringAgentChanged();
-    void timerChanged();
+    void pathCacheChanged();
 
 #ifdef EXPOSE_VISUALISATION_API
     void nodeAddedToClosedList(const QPointF &centrePos);
@@ -88,12 +95,18 @@ protected:
 private slots:
     void timerUpdated(qreal delta);
 
+    void addEntity(QuickEntity *entity, const GridPathData &pathData);
+
+    void connectToEntity(QuickEntity *entity);
+    void disconnectFromEntity(QuickEntity *entity);
+
 private:
     int mCellSize;
     GameTimer *mTimer;
     PassabilityAgent *mPassabilityAgent;
     SteeringAgent *mSteeringAgent;
     QHash<QuickEntity*, GridPathData> mData;
+    PathCache *mPathCache;
 };
 
 }

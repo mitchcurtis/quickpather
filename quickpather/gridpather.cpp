@@ -5,6 +5,7 @@
 #include <QQuickItem>
 
 #include "passabilityagent.h"
+#include "pathcache.h"
 #include "gametimer.h"
 #include "gridpathagent.h"
 #include "quickentity.h"
@@ -45,7 +46,8 @@ GridPather::GridPather(QObject *parent) :
     mCellSize(32),
     mTimer(nullptr),
     mPassabilityAgent(nullptr),
-    mSteeringAgent(nullptr)
+    mSteeringAgent(nullptr),
+    mPathCache(new PathCache(this))
 {
 }
 
@@ -111,6 +113,14 @@ bool GridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
     }
 
     qCDebug(lcGridPather) << "Looking for path to target pos" << pos;
+    if (mPathCache) {
+        const GridPathData cachedData = mPathCache->cachedData(entity, pos);
+        if (cachedData.isValid()) {
+            qCDebug(lcGridPather) << "Found cached path for" << entity << "to target pos" << pos;
+            addEntity(entity, cachedData);
+            return true;
+        }
+    }
 
     QVector<QSharedPointer<GridPathNode> > openList;
     QVector<QSharedPointer<GridPathNode> > closedList;
@@ -223,18 +233,39 @@ bool GridPather::moveEntityTo(QuickEntity *entity, const QPointF &pos)
     pathData.mTargetPos = pos;
     pathData.mNodes = shortestPath;
     pathData.mCurrentNodeIndex = 0;
-    mData.insert(entity, pathData);
 
-    QObject::connect(entity, &QuickEntity::entityDestroyed, this, &GridPather::cancelEntityMovement);
+    addEntity(entity, pathData);
+
+    if (mPathCache) {
+        // If we got this far, the path wasn't cached;
+        // add it to the cache so it's faster next time.
+        mPathCache->addCachedData(entity, pos, pathData);
+    }
 
     qCDebug(lcGridPather).nospace() << "Successfully found path (" << shortestPath.size() << " nodes) for "
         << entity << " to target pos " << pos << " after " << isPassableChecks << " isPassable() checks";
     return true;
 }
 
+void GridPather::addEntity(QuickEntity *entity, const GridPathData &pathData)
+{
+    mData.insert(entity, pathData);
+    connectToEntity(entity);
+}
+
 void GridPather::cancelEntityMovement(QuickEntity *entity)
 {
     mData.remove(entity);
+    disconnectFromEntity(entity);
+}
+
+void GridPather::connectToEntity(QuickEntity *entity)
+{
+    QObject::connect(entity, &QuickEntity::entityDestroyed, this, &GridPather::cancelEntityMovement);
+}
+
+void GridPather::disconnectFromEntity(QuickEntity *entity)
+{
     QObject::disconnect(entity, &QuickEntity::entityDestroyed, this, &GridPather::cancelEntityMovement);
 }
 
@@ -313,6 +344,20 @@ void GridPather::setSteeringAgent(SteeringAgent *steeringAgent)
 
     mSteeringAgent = steeringAgent;
     emit steeringAgentChanged();
+}
+
+PathCache *GridPather::pathCache()
+{
+    return mPathCache;
+}
+
+void GridPather::setPathCache(PathCache *cache)
+{
+    if (cache == mPathCache)
+        return;
+
+    mPathCache = cache;
+    emit pathCacheChanged();
 }
 
 GridPathData GridPather::pathData(QuickEntity *entity) const

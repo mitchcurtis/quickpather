@@ -16,7 +16,8 @@ HEADERS += \
     steeringagent.h \
     passabilityagent.h \
     box2dkineticsteeringagent.h \
-    directpather.h
+    directpather.h \
+    pathcache.h
 
 SOURCES += \
     gametimer.cpp \
@@ -27,4 +28,5 @@ SOURCES += \
     steeringagent.cpp \
     passabilityagent.cpp \
     box2dkineticsteeringagent.cpp \
-    directpather.cpp
+    directpather.cpp \
+    pathcache.cpp
